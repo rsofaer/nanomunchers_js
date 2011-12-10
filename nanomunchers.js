@@ -58,22 +58,21 @@ var Mothership = function(canvasElement){
   this.keyDownCount = 0;
   this.timer = null;
   this.onKeyDownTimer = function(){
-    if(this.keysDown["UP"] && !this.keysDown["DOWN"]){
-      this.canvasElement.animate({cy: this.canvasElement.attrs.cy-5},
-                                 this.animationTime)
+    var orders = {cx: this.canvasElement.attrs.cx, 
+                  cy: this.canvasElement.attrs.cy}
+    if(this.keysDown["UP"]){
+      orders.cy -= 5
     }
-    if(this.keysDown["DOWN"] && !this.keysDown["UP"]){
-      this.canvasElement.animate({cy: this.canvasElement.attrs.cy+5},
-                                 this.animationTime)
+    if(this.keysDown["DOWN"]){
+      orders.cy += 5
     }
-    if(this.keysDown["LEFT"] && !this.keysDown["RIGHT"]){
-      this.canvasElement.animate({cx: this.canvasElement.attrs.cx-5},
-                                 this.animationTime)
+    if(this.keysDown["LEFT"]){
+      orders.cx -= 5
     }
-    if(this.keysDown["RIGHT"] && !this.keysDown["LEFT"]){
-      this.canvasElement.animate({cx: this.canvasElement.attrs.cx+5},
-                                 this.animationTime)
+    if(this.keysDown["RIGHT"]){
+      orders.cx += 5
     }
+    this.canvasElement.animate(orders, this.animationTime);
   }.bind(this)
   this.move = function(flag, theKey){
     if("keydown" === flag){

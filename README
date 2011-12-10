@@ -1,2 +1,57 @@
 Javascript Nanomunchers for the Dr. Ecco website.
 Tests are in Jasmine: https://github.com/pivotal/jasmine/wiki
+
+INTRODUCTION
+The purpose of this project is to create a Nanomunchers game hosted on the Dr.
+Ecco website.
+
+DESIGN CRITERIA
+* We desire a game that is compelling to play over one that preserves all of
+  the computational rigor of the original programming assignment.
+* We desire a two player action game.
+
+GAMEPLAY
+The game page will display two 'clips' full of nanomunchers on the far left and
+right hand side of the screen. The Nanomunchers graph is located in the middle.
+
+ ---   -----------------------------   --- 
+| x | |                             | | x |
+| x | |  o        o--o--o    -      | | x |
+| x | |  |        |         -DD     | | x |
+| x | |  o--o     o          -      | | x |
+| x | |     |     |                 | | x |
+| x | |  o--o--o--o--o--o     o--o  | | x |
+| x | |     |           |     |     | | x |
+| x | |     o   -       o     o     | | x |
+| x | |        -DD      |     |     | | x |
+| x | |         -       o--o--o--o  | | x |
+| x | |                             | | x |
+ ---   -----------------------------   --- 
+
+The player 'motherships' are controlled using keyboard inputs as in
+first-person shooters for one player and the arrow keys for the other. A
+separate key unloads from the 'clip' of nanomunchers when in close enough
+proximity to a node on the graph.
+
+The simulation advances continuously. The appropriate gameplay speed will be
+determined by trying to keep the action compelling. All nanomunchers dropped
+while munchers are still driving to their next node will fall until the
+exisiting munchers complete the cycle, at which time the conflict resolution
+rules are enforced.
+
+MANDATORY FEATURES
+* Board generator.
+* Game state model.
+  - Controls board objects such as motherships, graphs, clips, etc.
+* Gameplay state machine.
+  - Presents UI states on page { Intro, Clip_Loading, Action, End }
+* High scores.
+
+OPTIONAL FEATURES
+* Prettier graphics!
+* Mode to have players strategize by loading their clips with hand-programmed
+  nanomunchers.
+* Game replay.
+* Sound effects.
+* A narrated story screen (for the die-hard fans).
+

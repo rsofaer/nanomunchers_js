@@ -51,7 +51,27 @@ Nanomunchers.boardGenerator = {
       }
     }
 
-    return {nodes: nodes, edges: edges, xSize: xSize, ySize: ySize};
+    var result = new Board(nodes, edges, xSize, ySize);
+    result.prototype = Board;
+    return result;
   }
 }
-Nanomunchers.boardGenerator.generateBoard = Nanomunchers.boardGenerator.generateBoard.bind(Nanomunchers.boardGenerator)
+
+function distance(a, b){
+  return Math.sqrt((a.x - b.x)^2, (a.y-b.y)^2);
+}
+Board = function(nodes, edges, xSize, ySize){ 
+  this.nodes = nodes;
+  this.edges = edges;
+  this.xSize = xSize;
+  this.ySize = ySize;
+}
+Board.prototype.closestNode = function(point){
+                 var distances = this.nodes.map(function(ele){
+                      return distance(ele, point);
+                     });
+                 console.log(distances);
+                 return Math.min(distances);
+               }
+
+bindAllFunctions(Nanomunchers.boardGenerator)

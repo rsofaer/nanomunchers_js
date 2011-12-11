@@ -1,17 +1,6 @@
 var Nanomunchers = {
 }
 
-function case_i_equals(charCode, keycode){
-  return (charCode === keycode || charCode - KEYCODES.CAPS_OFFSET === keycode);
-}
-
-function log(o){
-  if(console !== undefined && console.log !== undefined){
-    console.log(o);
-  }
-  return o;
-}
-
 var GameUI = {
   initialize: function(){
                 XSIZE = 800;
@@ -21,7 +10,7 @@ var GameUI = {
                 this.paper.canvas.style["border"] = "solid 1px";
                 this.player1 = new Mothership(this.paper.circle(100,100,50))
                 this.player2 = new Mothership(this.paper.circle(300,300,50))
-                board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8)
+                board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8, 0.75)
                 Nanomunchers.boardPainter.drawBoard(this.paper, board);
 
                 $(document).keydown(this.onKey.bind(this));

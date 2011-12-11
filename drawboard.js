@@ -36,12 +36,14 @@ Nanomunchers.boardPainter = {
     },
 
     drawNodes: function (nodes) {
+      
       for(var i=0;i<nodes.length;++i)
       {
           sourceLoc = nodes[i];
           c = this.paper.circle(sourceLoc.x,sourceLoc.y,
                this.RADIUS);
           c.attr('fill',this.CIRCLE_COLOR);
+          c.toBack();
       }
     },
     
@@ -74,14 +76,6 @@ Nanomunchers.boardPainter = {
       }
       return pathString; 
     }
-}
-
-function bindAllFunctions(obj){
-  for(p in obj){
-    if(obj.hasOwnProperty(p) && typeof p === "function"){
-      obj[p] = p.bind(obj);
-    }
-  }
 }
 
 bindAllFunctions(Nanomunchers.boardPainter)

@@ -49,16 +49,11 @@ var GameUI = {
                  "D":         function(flag){this.player1.move(flag, "RIGHT")},
                  "SPACEBAR":  function(flag){this.player1.drop(flag)},
                  // Player 2.
-                 "O":         function(flag){this.player2.move(flag, "UP")},
-                 "K":         function(flag){this.player2.move(flag, "LEFT")},
-                 "SEMICOLON": function(flag){this.player2.move(flag, "RIGHT")},
-                 "L":         function(flag){this.player2.move(flag, "DOWN")},
+                 "UP":        function(flag){this.player2.move(flag, "UP")},
+                 "LEFT":      function(flag){this.player2.move(flag, "LEFT")},
+                 "DOWN":      function(flag){this.player2.move(flag, "DOWN")},
+                 "RIGHT":     function(flag){this.player2.move(flag, "RIGHT")},
                  "RETURN":    function(flag){this.player2.drop(flag)}}
-
-                 //"UP":       function(){this.player2.up()},
-                 //"DOWN":     function(){this.player2.down()},
-                 //"LEFT":     function(){this.player2.left()},
-                 //"RIGHT":    function(){this.player2.right()},
 }
 
 var Mothership = function(canvasElement){

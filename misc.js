@@ -48,10 +48,3 @@ Array.shuffle = function(array) {
 
     return array;
 }
-Array.clone = function(array){
-  var result = [];
-  array.forEach(function(e){
-    result.push(e);
-  });
-  return result
-}

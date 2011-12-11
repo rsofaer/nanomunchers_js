@@ -1,2 +1,2 @@
 #! /bin/sh
-thin start -R rackup.ru
+thin start -R config.ru

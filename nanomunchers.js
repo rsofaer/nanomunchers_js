@@ -12,6 +12,9 @@ var Point = function(x_, y_){
 Point.prototype.add = function(point){
   return new Point(point.x + this.x, point.y + this.y);
 }
+Point.prototype.toS = function(){
+  return this.x + "," + this.y;
+}
 
 var GameUI = {
   initialize: function(){
@@ -167,8 +170,9 @@ var Mothership = function(paper, size, startPos, colorscheme){
   this.onKey = function(flag, theKey){
     if("keydown" === flag && theKey === "FIRE"){
       if(this.currentTarget !== undefined){
-        var muncher = new Muncher(GameUI.paper, 30, "LURD", this.currentTarget);
-        muncher.startGlowing();
+        var muncher = new Muncher(GameUI.paper, 30, this.currentTarget, COLOR_SCHEMES[colorscheme][1]);
+        GameUI.board.munchers.push(muncher);
+        //muncher.startGlowing();
       }
     }else if("keydown" === flag){
       if(this.keysDown[theKey] === 0)
@@ -206,17 +210,18 @@ function glowTargets(){
 }
 
 // Nanomuncher UI object.
-var Muncher = function(paper, size, program, startPos){
+var Muncher = function(paper, size, startPos, coreColor){
   var MUNCHER_GLOW_RATE_MS = 1000;
   var MUNCHER_COLOR = "#FFFACD"; // This is 'lemonchiffon', bitch.
-  var MUNCHER_CORE_COLOR = "#AA0AFF";
+  //var MUNCHER_CORE_COLOR = "#AA0AFF"; Not used because muncher cores are player colors.
   // Hard-coded order of canvas elements.
   var CANVAS_ELE_MAP = {
     "RIGHT": 1, "UP": 2, "LEFT": 3, "DOWN": 4, "CENTER" : 0
   };
 
   // The nanomuncher program. Used to render the instruction order.
-  this.program = program;
+  this.program = this.randomProgram();
+  var program = this.program;
   // The initial position of the nanomuncher in paper coordinates.
   this.startPos = new Point(startPos.x, startPos.y);
   // Setup the nanomuncher graphics.
@@ -235,7 +240,7 @@ var Muncher = function(paper, size, program, startPos){
         // Center.
         paper.circle(startPos.x, startPos.y,
                      rectDim / 2).attr({
-                       "fill" : MUNCHER_CORE_COLOR, "stroke" : "none"}),
+                       "fill" : coreColor, "stroke" : "none"}),
         // Right.
         paper.rect(startPos.x + rectHalfDim,
                    startPos.y - rectHalfDim,
@@ -255,7 +260,7 @@ var Muncher = function(paper, size, program, startPos){
         // Down.
         paper.rect(startPos.x - rectHalfDim,
                    startPos.y - rectHalfDim,
-                   rectDim, rectDim).attr("fill", MUNCHER_CORE_COLOR),
+                   rectDim, rectDim).attr("fill", coreColor),
         // Right.
         paper.text(startPos.x + rectDim, startPos.y, programOrder[0]).attr({
           "font-family" : "Courier", "font-size" : textSize
@@ -277,7 +282,7 @@ var Muncher = function(paper, size, program, startPos){
   }()
   // Create glow for core.
   this.coreGlow = this.canvasElement[CANVAS_ELE_MAP["CENTER"]].glow({
-      "color" : MUNCHER_CORE_COLOR, "fill" : true
+      "color" : coreColor, "fill" : true
       }).toFront().transform("s0");
   // Glow state flag.
   this.glowState = 0;
@@ -288,6 +293,8 @@ var Muncher = function(paper, size, program, startPos){
   }.bind(this)
   // The recursive glow routine.
   this.glowCallback = function(){
+    console.log("whaat");
+    console.log(this.coreGlow)
     if(this.glowing){
       var tformStr = "s";
       if(this.glowState === 0){
@@ -321,4 +328,6 @@ var Muncher = function(paper, size, program, startPos){
     this.glowing = false;
   }.bind(this)
 }
-
+Muncher.prototype.randomProgram = function(){
+  return Array.shuffle(["L","U","R","D"]);
+}

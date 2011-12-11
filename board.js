@@ -23,19 +23,9 @@ Nanomunchers.boardGenerator = {
       }
     }
 
-    function shuffle(array) {
-        var tmp, current, top = array.length;
-        if(top) while(--top) {
-            current = Math.floor(Math.random() * (top + 1));
-            tmp = array[current];
-            array[current] = array[top];
-            array[top] = tmp;
-        }
 
-        return array;
-    }
 
-    shuffle(nodes);
+    Array.shuffle(nodes);
 
     nodes.splice(numNodes, nodes.length - numNodes);
 
@@ -60,12 +50,16 @@ Nanomunchers.boardGenerator = {
 function distance(a, b){
   return Math.sqrt(Math.pow((a.x - b.x),2) + Math.pow((a.y-b.y),2));
 }
+
 Board = function(nodes, edges, xSize, ySize){ 
   this.nodes = nodes;
   this.edges = edges;
   this.xSize = xSize;
   this.ySize = ySize;
+  this.munchers = [];
+  this.time = 0;
 }
+
 var MAX_TARGET_DIST = 120;
 Board.prototype.closestNode = function(point){
   return Array.min(this.nodes, function(e){

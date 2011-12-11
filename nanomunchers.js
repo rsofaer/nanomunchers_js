@@ -57,13 +57,13 @@ var GameUI = {
                  "A":         function(flag){this.player1.onKey(flag, "LEFT")},
                  "S":         function(flag){this.player1.onKey(flag, "DOWN")},
                  "D":         function(flag){this.player1.onKey(flag, "RIGHT")},
-                 "SPACEBAR":  function(flag){this.player1.onKey(flag)},
+                 "SPACEBAR":  function(flag){this.player1.onKey(flag, "FIRE")},
                  // Player 2.
                  "UP":        function(flag){this.player2.onKey(flag, "UP")},
                  "LEFT":      function(flag){this.player2.onKey(flag, "LEFT")},
                  "DOWN":      function(flag){this.player2.onKey(flag, "DOWN")},
                  "RIGHT":     function(flag){this.player2.onKey(flag, "RIGHT")},
-                 "RETURN":    function(flag){this.player2.onKey(flag)}},
+                 "RETURN":    function(flag){this.player2.onKey(flag, "FIRE")}},
 
   addTimedObject: function(obj){
     if(this.timedObjects.indexOf(obj) < 0){
@@ -165,7 +165,12 @@ var Mothership = function(paper, size, startPos, colorscheme){
   }.bind(this)
   // Process key press.
   this.onKey = function(flag, theKey){
-    if("keydown" === flag){
+    if("keydown" === flag && theKey === "FIRE"){
+      if(this.currentTarget !== undefined){
+        var muncher = new Muncher(GameUI.paper, 30, "LURD", this.currentTarget);
+        muncher.startGlowing();
+      }
+    }else if("keydown" === flag){
       if(this.keysDown[theKey] === 0)
       {
         this.keysDown[theKey] = 1;
@@ -189,6 +194,7 @@ var Mothership = function(paper, size, startPos, colorscheme){
       }
     }
   });
+  this.__defineGetter__("currentTarget", function(){ return this._currentTarget_; });
 }
 
 function glowTargets(){

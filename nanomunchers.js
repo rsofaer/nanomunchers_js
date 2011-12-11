@@ -1,12 +1,16 @@
 var Nanomunchers = {
 }
 
+// Time between animation updates.
+var TIMER_UPDATE_MS = 50;
+
 // A 2d point.
 var Point = function(x_, y_){
   this.x = x_;
   this.y = y_;
-  this.__defineGetter__("cx", function(){ return this.x });
-  this.__defineGetter__("cy", function(){ return this.y });
+}
+Point.prototype.add = function(point){
+  return new Point(point.x + this.x, point.y + this.y);
 }
 
 var GameUI = {
@@ -22,11 +26,12 @@ var GameUI = {
                 this.player2 = new Mothership(this.paper, 50,
                                               new Point(500, 300), "FOREST")
 
-                board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8, 0.75)
-                Nanomunchers.boardPainter.drawBoard(this.paper, board);
+                this.board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8, 0.75)
+                Nanomunchers.boardPainter.drawBoard(this.paper, this.board);
 
                 $(document).keydown(this.onKey.bind(this));
                 $(document).keyup(this.onKey.bind(this));
+                this.timer = setInterval(this.timerService.bind(this), TIMER_UPDATE_MS);
               },
 
   onKey: function(e){
@@ -55,23 +60,30 @@ var GameUI = {
                  "LEFT":      function(flag){this.player2.onKey(flag, "LEFT")},
                  "DOWN":      function(flag){this.player2.onKey(flag, "DOWN")},
                  "RIGHT":     function(flag){this.player2.onKey(flag, "RIGHT")},
-                 "RETURN":    function(flag){this.player2.onKey(flag)}}
+                 "RETURN":    function(flag){this.player2.onKey(flag)}},
+  
+  timerService: function(){
+    [this.player1, this.player2].forEach(function(player){
+      player.timerService();
+      var closestNode = this.board.closestNode(player.loc);
+      player.currentTarget = closestNode;
+    }.bind(this));
+  }
 }
+bindAllFunctions(GameUI);
 
 var Mothership = function(paper, size, startPos, colorscheme){
   // Available schemes.
   var COLOR_SCHEMES = {
-    "SEA":    [ "lightblue",  "blue" ],
-    "FOREST": [ "lightgreen", "green" ],
+    "SEA":    [ "lightblue",  "blue", {width: 13, color: "blue"} ],
+    "FOREST": [ "lightgreen", "green", {width: 13, color: "green", opacity: 0.7} ],
   };
-  // Time between animation updates.
-  var TIMER_UPDATE_MS = 50;
   // Angle to rotate per animation step.
-  var SHIP_ROTATION_SPEED = 12;
+  var SHIP_ROTATION_SPEED = 18;
   // Additional speed when moving.
   var SHIP_ROTATION_SPEED_MOVE = 3;
   // Ship translation speed.
-  var SHIP_SPEED = 3;
+  var SHIP_SPEED = 4;
   // Time to animate.
   var ANIMATION_TIME = 25;
   // Current ship angle.
@@ -81,6 +93,7 @@ var Mothership = function(paper, size, startPos, colorscheme){
   // Ship center coordinate.
   this.shipCoord = new Point(startPos.x, startPos.y);
   this.animationOffset = new Point(0, 0);
+  this.__defineGetter__("loc", function(){ return this.animationOffset.add(this.shipCoord)})
   // Setup the ship graphics.
   this.canvasElement = function(){
     var set = paper.set();
@@ -134,8 +147,6 @@ var Mothership = function(paper, size, startPos, colorscheme){
     }
     this.animate(this.animationOffset);
   }.bind(this)
-  // Setup the timer service.
-  this.timer = setInterval(this.timerService, TIMER_UPDATE_MS);
   // Process key press.
   this.onKey = function(flag, theKey){
     if("keydown" === flag){
@@ -148,4 +159,23 @@ var Mothership = function(paper, size, startPos, colorscheme){
       this.keysDown[theKey] = 0;
     }
   }.bind(this)
+
+  this.targetGlowParams = COLOR_SCHEMES[colorscheme][2];
+  this.__defineSetter__("currentTarget", function(node){
+    if(this._currentTarget_ !== node){
+      if(this._currentTargetGlow_ !== undefined){
+        this._currentTargetGlow_.remove()
+      }
+      this._currentTarget_ = node;
+      this._currentTargetGlow_ = node.canvasElement.glow(this.targetGlowParams);
+    }
+  });
+}
+
+function glowTargets(){
+  var player1Target = GameUI.board.closestNode(GameUI.player1.loc)
+  var player2Target = GameUI.board.closestNode(GameUI.player2.loc)
+
+  player1Target.canvasElement.glow({color: "blue"})
+  player2Target.canvasElement.glow({color: "green"})
 }

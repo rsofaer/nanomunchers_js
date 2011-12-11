@@ -44,6 +44,7 @@ Nanomunchers.boardPainter = {
                this.RADIUS);
           c.attr('fill',this.CIRCLE_COLOR);
           c.toBack();
+          nodes[i].canvasElement = c;
       }
     },
     

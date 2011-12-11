@@ -19,7 +19,7 @@ Nanomunchers.boardGenerator = {
     var nodes = []
     for(var i = 0; i < xSize; i++){
       for(var j = 0; j < ySize; j++){
-        nodes.push({x: i, y: j});
+        nodes.push(new Node(i,j));
       }
     }
 
@@ -58,7 +58,7 @@ Nanomunchers.boardGenerator = {
 }
 
 function distance(a, b){
-  return Math.sqrt((a.x - b.x)^2, (a.y-b.y)^2);
+  return Math.sqrt(Math.pow((a.x - b.x),2) + Math.pow((a.y-b.y),2));
 }
 Board = function(nodes, edges, xSize, ySize){ 
   this.nodes = nodes;
@@ -67,11 +67,14 @@ Board = function(nodes, edges, xSize, ySize){
   this.ySize = ySize;
 }
 Board.prototype.closestNode = function(point){
-                 var distances = this.nodes.map(function(ele){
-                      return distance(ele, point);
-                     });
-                 console.log(distances);
-                 return Math.min(distances);
-               }
+  return Array.min(this.nodes, function(e){
+    return distance(point, e);
+  });
+}
+
+var Node = function(x_, y_){
+  this.x = x_
+  this.y = y_
+}
 
 bindAllFunctions(Nanomunchers.boardGenerator)

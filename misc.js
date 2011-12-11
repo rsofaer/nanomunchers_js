@@ -17,11 +17,23 @@ function bindAllFunctions(obj){
   }
 }
 
-Array.min = function( array, f ){
-    var index = 0;
-    var runningMin = Number.MAX_VALUE;
-    for(var i = 0; i < array.length; i++){
-      
+Array.minIndex = function( array, toNumF ){
+  toNumF = typeof(toNumF) != 'undefined' ? toNumF : function(e){ return e};
+
+  var index = -1;
+  var runningMin = Number.MAX_VALUE;
+  array.forEach(function(ele, ind){
+    if(toNumF(ele) < runningMin){
+      index = ind;
+      runningMin = toNumF(ele);
     }
-    return Math.min.apply( Math, array );
+  });
+  return index;
 };
+
+Array.min = function(array, toNumF){
+  var idx = Array.minIndex(array, toNumF);
+  if(idx !== -1){
+    return array[idx];
+  }
+}

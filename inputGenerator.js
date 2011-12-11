@@ -51,7 +51,7 @@ Nanomunchers.boardGenerator = {
       }
     }
 
-    return {nodes: nodes, edges: edges};
+    return {nodes: nodes, edges: edges, xSize: xSize, ySize: ySize};
   }
 }
 Nanomunchers.boardGenerator.generateBoard = Nanomunchers.boardGenerator.generateBoard.bind(Nanomunchers.boardGenerator)

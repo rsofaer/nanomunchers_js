@@ -5,12 +5,23 @@ function case_i_equals(charCode, keycode){
   return (charCode === keycode || charCode - KEYCODES.CAPS_OFFSET === keycode);
 }
 
+function log(o){
+  if(console !== undefined && console.log !== undefined){
+    console.log(o);
+  }
+  return o;
+}
+
 var GameUI = {
   initialize: function(){
-                this.paper = Raphael("game-screen", 800, 600)
+                XSIZE = 800;
+                YSIZE = 600;
+                this.paper = Raphael("game-screen", XSIZE, YSIZE)
                 this.paper.canvas.style["background-color"] = "gray";
                 this.player1 = new Mothership(this.paper.circle(100,100,50))
                 this.player2 = new Mothership(this.paper.circle(300,300,50))
+                board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/2)
+                Nanomunchers.boardPainter.drawBoard(this.paper, board);
 
                 $(document).keydown(this.onKey.bind(this));
                 $(document).keyup(this.onKey.bind(this));

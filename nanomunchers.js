@@ -17,10 +17,11 @@ var GameUI = {
                 XSIZE = 800;
                 YSIZE = 600;
                 this.paper = Raphael("game-screen", XSIZE, YSIZE)
-                this.paper.canvas.style["background-color"] = "gray";
+                this.paper.canvas.style["background-color"] = "lightgray";
+                this.paper.canvas.style["border"] = "solid 1px";
                 this.player1 = new Mothership(this.paper.circle(100,100,50))
                 this.player2 = new Mothership(this.paper.circle(300,300,50))
-                board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/2)
+                board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8)
                 Nanomunchers.boardPainter.drawBoard(this.paper, board);
 
                 $(document).keydown(this.onKey.bind(this));

@@ -3,7 +3,7 @@ Nanomunchers.boardPainter = {
     RADIUS: 15,
     SCALAR: 60,
     CIRCLE_COLOR: 'red',
-    LINE_COLOR: 'red',
+    LINE_COLOR: 'black',
     LINE_LENGTH: 20,
 
     drawBoard: function(paper, board){
@@ -46,16 +46,16 @@ Nanomunchers.boardPainter = {
     },
     
     drawLines: function (nodes,edges) {
-      for(var i=0;i<edges.length;++i) {
-          var edge = edges[i];
-          var source = edge[0];
-          var sink = edge[1];
-          var sourceLoc = nodes[source];
-          var sinkLoc = nodes[sink];
-          var pathString = this.getPathString(sourceLoc,sinkLoc);
-          line = this.paper.path(pathString);
-          line.attr('stroke',this.LINE_COLOR);
-      }
+      edges.forEach(function(edge){
+        var source = edge[0];
+        var sink = edge[1];
+        var sourceLoc = nodes[source];
+        var sinkLoc = nodes[sink];
+        var pathString = this.getPathString(sourceLoc,sinkLoc);
+        line = this.paper.path(pathString);
+        line.attr('stroke',this.LINE_COLOR);
+        line.toBack();
+      }.bind(this));
     },
     
     getPathString: function (sourceLoc, sinkLoc) {

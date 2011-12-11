@@ -5,11 +5,20 @@ function case_i_equals(charCode, keycode){
   return (charCode === keycode || charCode - KEYCODES.CAPS_OFFSET === keycode);
 }
 
+// Log given object to console.
 function log(o){
   if(console !== undefined && console.log !== undefined){
     console.log(o);
   }
   return o;
+}
+
+// A 2d point.
+var Point = function(x_, y_){
+  this.x = x_;
+  this.y = y_;
+  this.__defineGetter__("cx", function(){ return this.x });
+  this.__defineGetter__("cy", function(){ return this.y });
 }
 
 var GameUI = {
@@ -19,8 +28,10 @@ var GameUI = {
                 this.paper = Raphael("game-screen", XSIZE, YSIZE)
                 this.paper.canvas.style["background-color"] = "lightgray";
                 this.paper.canvas.style["border"] = "solid 1px";
-                this.player1 = new Mothership(this.paper.circle(100,100,50))
-                this.player2 = new Mothership(this.paper.circle(300,300,50))
+                this.player1 = new Mothership(this.paper, 50,
+                                              new Point(300, 300))
+                this.player2 = new Mothership(this.paper, 50,
+                                              new Point(500, 300))
                 board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8)
                 Nanomunchers.boardPainter.drawBoard(this.paper, board);
 
@@ -44,75 +55,100 @@ var GameUI = {
              },
 
   keyMappings: { // Player 1.
-                 "W":         function(flag){this.player1.move(flag, "UP")},
-                 "A":         function(flag){this.player1.move(flag, "LEFT")},
-                 "S":         function(flag){this.player1.move(flag, "DOWN")},
-                 "D":         function(flag){this.player1.move(flag, "RIGHT")},
-                 "SPACEBAR":  function(flag){this.player1.drop(flag)},
+                 "W":         function(flag){this.player1.onKey(flag, "UP")},
+                 "A":         function(flag){this.player1.onKey(flag, "LEFT")},
+                 "S":         function(flag){this.player1.onKey(flag, "DOWN")},
+                 "D":         function(flag){this.player1.onKey(flag, "RIGHT")},
+                 "SPACEBAR":  function(flag){this.player1.onKey(flag)},
                  // Player 2.
-                 "UP":        function(flag){this.player2.move(flag, "UP")},
-                 "LEFT":      function(flag){this.player2.move(flag, "LEFT")},
-                 "DOWN":      function(flag){this.player2.move(flag, "DOWN")},
-                 "RIGHT":     function(flag){this.player2.move(flag, "RIGHT")},
-                 "RETURN":    function(flag){this.player2.drop(flag)}}
+                 "UP":        function(flag){this.player2.onKey(flag, "UP")},
+                 "LEFT":      function(flag){this.player2.onKey(flag, "LEFT")},
+                 "DOWN":      function(flag){this.player2.onKey(flag, "DOWN")},
+                 "RIGHT":     function(flag){this.player2.onKey(flag, "RIGHT")},
+                 "RETURN":    function(flag){this.player2.onKey(flag)}}
 }
 
-var Mothership = function(canvasElement){
+var Mothership = function(paper, size, startPos){
+  // Time between animation updates.
   var TIMER_UPDATE_MS = 50;
-  this.canvasElement = canvasElement;
-  this.animationTime = 25;
+  // Angle to rotate per animation step.
+  var SHIP_ROTATION_SPEED = 12;
+  // Additional speed when moving.
+  var SHIP_ROTATION_SPEED_MOVE = 3;
+  // Ship translation speed.
+  var SHIP_SPEED = 3;
+  // Time to animate.
+  var ANIMATION_TIME = 25;
+  // Current ship angle.
+  this.shipAngle = 0;
+  // Bounding box of ship.
+  this.boundingBoxSize = size;
+  // Ship center coordinate.
+  this.shipCoord = new Point(startPos.x, startPos.y);
+  this.animationOffset = new Point(0, 0);
+  // Setup the ship graphics.
+  this.canvasElement = function(paper, size, startPos){
+    var set = paper.set();
+    var halfSize = size / 2;
+    var triangleSide = (3 / Math.sqrt(3)) * halfSize;
+    var triangleHt = (Math.sqrt(3) / 2) * triangleSide;
+    var triangleHalfSize = triangleSide / 2;
+    var trianglePath = "M" + startPos.x + "," + (startPos.y - halfSize) + "," +
+                       "L" + (startPos.x + triangleHalfSize) + "," +
+                             (startPos.y - halfSize + triangleHt) + "," +
+                       "L" + (startPos.x - triangleHalfSize) + "," +
+                             (startPos.y - halfSize + triangleHt) + "," +
+                       "L" + startPos.x + "," + (startPos.y - halfSize);
+    set.push(
+        paper.circle(startPos.x, startPos.y, halfSize * 0.8),
+        paper.path(trianglePath)
+        );
+    return set;
+  }(paper, size, startPos)
+  // Map of keys pressed.
   this.keysDown = {"UP": 0, "DOWN": 0, "LEFT": 0, "RIGHT": 0};
-  this.keyDownCount = 0;
-  this.timer = null;
-  this.onKeyDownTimer = function(){
-    var orders = {cx: this.canvasElement.attrs.cx, 
-                  cy: this.canvasElement.attrs.cy}
+  // Animate the ship by an offset.
+  this.animate = function(offset){
+    var tformStr = "t" + offset.x + "," + offset.y +
+                   "r" + this.shipAngle + "," +
+                         this.shipCoord.x + "," + this.shipCoord.y;
+    this.canvasElement.animate( { transform: tformStr }, ANIMATION_TIME)
+  }.bind(this)
+  // Timer service routine.
+  this.timerService = function(){
+    // Update the rotation.
+    this.shipAngle += SHIP_ROTATION_SPEED;
+    // Animate the ship position.
     if(this.keysDown["UP"]){
-      orders.cy -= 5
+      this.animationOffset.y -= SHIP_SPEED;
+      this.shipAngle += SHIP_ROTATION_SPEED_MOVE;
     }
     if(this.keysDown["DOWN"]){
-      orders.cy += 5
+      this.animationOffset.y += SHIP_SPEED;
+      this.shipAngle += SHIP_ROTATION_SPEED_MOVE;
     }
     if(this.keysDown["LEFT"]){
-      orders.cx -= 5
+      this.animationOffset.x -= SHIP_SPEED;
+      this.shipAngle += SHIP_ROTATION_SPEED_MOVE;
     }
     if(this.keysDown["RIGHT"]){
-      orders.cx += 5
+      this.animationOffset.x += SHIP_SPEED;
+      this.shipAngle += SHIP_ROTATION_SPEED_MOVE;
     }
-    this.canvasElement.animate(orders, this.animationTime);
+    this.animate(this.animationOffset);
   }.bind(this)
-  this.move = function(flag, theKey){
+  // Setup the timer service.
+  this.timer = setInterval(this.timerService, TIMER_UPDATE_MS);
+  // Process key press.
+  this.onKey = function(flag, theKey){
     if("keydown" === flag){
       if(this.keysDown[theKey] === 0)
       {
-        if(theKey === "UP"){
-          this.canvasElement.animate({cy: this.canvasElement.attrs.cy-5},
-                                     this.animationTime)
-        }
-        else if(theKey === "DOWN"){
-          this.canvasElement.animate({cy: this.canvasElement.attrs.cy+5},
-                                     this.animationTime)
-        }
-        else if(theKey === "LEFT"){
-          this.canvasElement.animate({cx: this.canvasElement.attrs.cx-5},
-                                     this.animationTime)
-        }
-        else if(theKey === "RIGHT"){
-          this.canvasElement.animate({cx: this.canvasElement.attrs.cx+5},
-                                     this.animationTime)
-        }
         this.keysDown[theKey] = 1;
-        if(++this.keyDownCount === 1){
-          this.timer = setInterval(this.onKeyDownTimer, TIMER_UPDATE_MS);
-        }
       }
     }
     else if("keyup" === flag){
       this.keysDown[theKey] = 0;
-      if(--this.keyDownCount === 0){
-        clearInterval(this.timer);
-        this.timer = null
-      }
     }
   }.bind(this)
 }

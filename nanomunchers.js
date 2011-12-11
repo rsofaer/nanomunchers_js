@@ -35,15 +35,17 @@ var GameUI = {
               },
 
   onKey: function(e){
-               // Dispatch WASD to move player 1's ship, and spacebar to drop
-               // Arrow keys for player 2's ship, and enter to drop
+               // Handle keys using key mappings.
                var keyCode = e.keyCode;
                if(keyCode >= KEYCODES.A + KEYCODES.CAPS_OFFSET &&
                    keyCode <= KEYCODES.Z + KEYCODES.CAPS_OFFSET){
                  keyCode -= KEYCODES.CAPS_OFFSET;
                }
-
-               var keyName = KEYCODES[keyCode]
+               var keyName = KEYCODES[keyCode];
+               // Prevent defaults for arrows.
+               if(["UP", "LEFT", "DOWN", "RIGHT"].indexOf(keyName) >= 0){
+                 e.preventDefault();
+               }
                if(this.keyMappings[keyName] !== undefined){
                  this.keyMappings[keyName].apply(this, [e.type]);
                }

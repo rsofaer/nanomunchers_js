@@ -18,8 +18,8 @@ Point.prototype.toS = function(){
 
 var GameUI = {
   initialize: function(){
-                XSIZE = 800;
-                YSIZE = 600;
+                var XSIZE = 800;
+                var YSIZE = 600;
                 this.paper = Raphael("game-screen", XSIZE, YSIZE)
                 this.paper.canvas.style["background-color"] = "lightgray";
                 this.paper.canvas.style["border"] = "solid 1px";
@@ -29,7 +29,7 @@ var GameUI = {
                 this.player2 = new Mothership(this.paper, 50,
                                               new Point(500, 300), "FOREST")
 
-                this.board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8, 0.75)
+                this.board = new Board(10,8,10*8/1.8, 0.75)
                 Nanomunchers.boardPainter.drawBoard(this.paper, this.board);
 
                 $(document).keydown(this.onKey.bind(this));
@@ -170,8 +170,9 @@ var Mothership = function(paper, size, startPos, colorscheme){
   this.onKey = function(flag, theKey){
     if("keydown" === flag && theKey === "FIRE"){
       if(this.currentTarget !== undefined){
-        var muncher = new Muncher(GameUI.paper, 30, this.currentTarget, COLOR_SCHEMES[colorscheme][1]);
-        GameUI.board.munchers.push(muncher);
+        var program = Muncher.randomProgram();
+        var muncher = new MuncherView(GameUI.paper, 30, this.currentTarget,
+                                      program, COLOR_SCHEMES[colorscheme][1]);
         //muncher.startGlowing();
       }
     }else if("keydown" === flag){
@@ -210,7 +211,7 @@ function glowTargets(){
 }
 
 // Nanomuncher UI object.
-var Muncher = function(paper, size, startPos, coreColor){
+var MuncherView = function(paper, size, startPos, program, coreColor){
   var MUNCHER_GLOW_RATE_MS = 1000;
   var MUNCHER_COLOR = "#FFFACD"; // This is 'lemonchiffon', bitch.
   //var MUNCHER_CORE_COLOR = "#AA0AFF"; Not used because muncher cores are player colors.
@@ -220,7 +221,7 @@ var Muncher = function(paper, size, startPos, coreColor){
   };
 
   // The nanomuncher program. Used to render the instruction order.
-  this.program = this.randomProgram();
+  this.program = program;
   var program = this.program;
   // The initial position of the nanomuncher in paper coordinates.
   this.startPos = new Point(startPos.x, startPos.y);
@@ -328,6 +329,4 @@ var Muncher = function(paper, size, startPos, coreColor){
     this.glowing = false;
   }.bind(this)
 }
-Muncher.prototype.randomProgram = function(){
-  return Array.shuffle(["L","U","R","D"]);
-}
+

@@ -22,10 +22,15 @@ var Simulator = function(){
     });
 
     for(p in conflictMap){
+      // Iterate non-inherited properties (the map) (this comment is for
+      // Brandon).
       if(conflictMap.hasOwnProperty(p)){
-        var muncherArr = conflictMap(p);
+        var muncherArr = conflictMap[p];
         if(muncherArr.length > 1){
-          // We have more than one muncher at a node.  We must resolve through combat.
+          // TODO(reissb) -- 20111211 --
+          //  Muncher array is a list of munchers @ each node.
+          // We have more than one muncher at a node.  We must resolve through
+          // combat.
         }
       }
     }
@@ -46,3 +51,19 @@ var Simulator = function(){
   }
 }()
 bindAllFunctions(Simulator);
+
+// Muncher logic object used during simulation.
+var Muncher = function(startNode, startTime, program){
+  // The time that the muncher was dropped.
+  this.startTime = startTime;
+  // The nanomuncher location.
+  this.node = startNode;
+  // The nanomuncher program.
+  this.program = program;
+}
+// Generate a random program.
+Muncher.randomProgram = function(){
+  return Array.shuffle(["L","U","R","D"]);
+}
+bindAllFunctions(Muncher);
+

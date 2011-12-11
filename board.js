@@ -1,80 +1,68 @@
-Nanomunchers.boardGenerator = {
-  isSame: function(nodeA, nodeB){
-    return (nodeA.x === nodeB.x && nodeA.y === nodeB.y)
-  },
+// A board is a set of nodes and edges.
+Board = function(xSize, ySize, numNodes, edgeProb){ 
+  this.xSize = typeof(xSize) != 'undefined' ? xSize : 30;
+  this.ySize = typeof(ySize) != 'undefined' ? ySize : 20;
 
-  isNeighbor: function(nodeA, nodeB){
-  return (nodeA.x === nodeB.x && Math.abs(nodeA.y - nodeB.y) === 1) ||
-         (nodeA.y === nodeB.y && Math.abs(nodeA.x - nodeB.x) === 1);
-  },
+  var numNodes = typeof(numNodes) != 'undefined' ? numNodes : 700;
+  // if there could be an edge between i and j, there
+  // is an edgeprob chance that it will be there
+  var edgeProb = typeof(edgeProb) != 'undefined' ? edgeProb : 0.7;
 
-  generateBoard: function(xSize, ySize, numNodes, edgeProb){
-    xSize = typeof(xSize) != 'undefined' ? xSize : 30;
-    ySize = typeof(ySize) != 'undefined' ? ySize : 20;
-    numNodes = typeof(numNodes) != 'undefined' ? numNodes : 700;
-    edgeProb = typeof(edgeProb) != 'undefined' ? edgeProb : 0.7;
-    // if there could be an edge between i and j, there
-    // is an edgeprob chance that it will be there
-
-    var nodes = []
-    for(var i = 0; i < xSize; i++){
-      for(var j = 0; j < ySize; j++){
-        nodes.push(new Node(i,j));
-      }
+  // Create all possible nodes.
+  this.nodes = []
+  for(var i = 0; i < xSize; i++){
+    for(var j = 0; j < ySize; j++){
+      this.nodes.push(new Node(i,j));
     }
-
-
-
-    Array.shuffle(nodes);
-
-    nodes.splice(numNodes, nodes.length - numNodes);
-
-    var edges = []
-
-    for(var i = 0; i < nodes.length; i++){
-      for(var j = i; j < nodes.length; j++){
-        if(this.isNeighbor(nodes[i], nodes[j])){
-          if(Math.random() <= edgeProb){
-            edges.push([i,j]);
-          }
+  }
+  // Pick a random subset of size numNodes.
+  Array.shuffle(this.nodes);
+  this.nodes.splice(numNodes, this.nodes.length - numNodes);
+  // Create random edges based on edgeProb.
+  this.edges = []
+  for(var i = 0; i < this.nodes.length; i++){
+    for(var j = i; j < this.nodes.length; j++){
+      if(this.nodes[i].isNeighbor(this.nodes[j])){
+        if(Math.random() <= edgeProb){
+          this.edges.push([i,j]);
         }
       }
     }
-
-    var result = new Board(nodes, edges, xSize, ySize);
-    result.prototype = Board;
-    return result;
   }
 }
 
-function distance(a, b){
-  return Math.sqrt(Math.pow((a.x - b.x),2) + Math.pow((a.y-b.y),2));
-}
-
-Board = function(nodes, edges, xSize, ySize){ 
-  this.nodes = nodes;
-  this.edges = edges;
-  this.xSize = xSize;
-  this.ySize = ySize;
-  this.munchers = [];
-  this.time = 0;
-}
-
-var MAX_TARGET_DIST = 120;
+// The target distance controls the farthest that a ship can be while
+// targeting a node.
 Board.prototype.closestNode = function(point){
+  var MAX_TARGET_DIST = 120;
   return Array.min(this.nodes, function(e){
-    var dist = distance(point, e);
+    var dist = e.distance(point);
     if(dist > MAX_TARGET_DIST){
       return Number.MAX_VALUE;
-    }else{
+    }
+    else{
       return dist;
     }
   });
 }
 
+// A node is 2d point location.
 var Node = function(x_, y_){
-  this.x = x_
-  this.y = y_
+  this.x = x_;
+  this.y = y_;
+  // Test if another node is the same.
+  this.isSame = function(nodeB){
+    return (this.x === nodeB.x) && (this.y === nodeB.y)
+  };
+  // Calculate the distance between two nodes.
+  this.distance = function(b){
+    return Math.sqrt(Math.pow((this.x - b.x),2) + Math.pow((this.y-b.y),2));
+  };
+  // Check if the node is a neighbor.
+  this.isNeighbor = function(nodeB){
+    return (this.x === nodeB.x && Math.abs(this.y - nodeB.y) === 1) ||
+           (this.y === nodeB.y && Math.abs(this.x - nodeB.x) === 1);
+  };
 }
+bindAllFunctions(Node)
 
-bindAllFunctions(Nanomunchers.boardGenerator)

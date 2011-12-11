@@ -16,19 +16,19 @@ Nanomunchers.boardPainter = {
     adjustCoordinates: function(board){
       if(board.center === undefined){
 
-        board.center = {original_x: board.xSize/2 - .5,
-                        original_y: board.ySize/2 - .5,
+        board.center = {sim_x: board.xSize/2 - .5,
+                        sim_y: board.ySize/2 - .5,
                         x: this.paper.width/2,
                         y: this.paper.height/2}
 
         board.nodes.forEach(function(node){
-            node.original_x = node.x;
-            node.original_y = node.y;
+            node.sim_x = node.x;
+            node.sim_y = node.y;
 
-            var original_dx = board.center.original_x - node.original_x;
-            var original_dy = board.center.original_y - node.original_y;
-            node.x = board.center.x + original_dx*this.SCALAR;
-            node.y = board.center.y + original_dy*this.SCALAR;
+            var sim_dx = board.center.sim_x - node.sim_x;
+            var sim_dy = board.center.sim_y - node.sim_y;
+            node.x = board.center.x + sim_dx*this.SCALAR;
+            node.y = board.center.y + sim_dy*this.SCALAR;
         }.bind(this))
 
       }

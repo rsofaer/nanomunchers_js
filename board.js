@@ -36,6 +36,25 @@ Nanomunchers.boardGenerator = {
         if(this.isNeighbor(nodes[i], nodes[j])){
           if(Math.random() <= edgeProb){
             edges.push([i,j]);
+            if(nodes[i].x === nodes[j].x){
+              // Higher y value is above
+              if(nodes[i].y === nodes[j].y + 1){
+                nodes[j]["U"] = nodes[i]
+                nodes[i]["D"] = nodes[j]
+              }else{
+                nodes[j]["D"] = nodes[i]
+                nodes[i]["U"] = nodes[j]
+              }
+            }else if(nodes[i].y === nodes[j].y){
+             // Higher x value is to the left
+              if(nodes[i].x === nodes[j].x + 1){
+                nodes[i]["R"] = nodes[j];
+                nodes[j]["L"] = nodes[i];
+              }else{
+                nodes[i]["L"] = nodes[j];
+                nodes[j]["R"] = nodes[i];
+              }
+            }
           }
         }
       }

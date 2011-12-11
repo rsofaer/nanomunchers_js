@@ -3,6 +3,7 @@ Nanomunchers.boardPainter = {
     RADIUS: 15,
     SCALAR: 60,
     CIRCLE_COLOR: 'red',
+    EATEN_COLOR: 'dimgray',
     LINE_COLOR: 'black',
     LINE_LENGTH: 20,
 
@@ -78,5 +79,10 @@ Nanomunchers.boardPainter = {
       return pathString; 
     }
 }
-
 bindAllFunctions(Nanomunchers.boardPainter)
+
+Node.prototype.consume = function(){
+  if(this.canvasElement === undefined)
+    return;
+  this.canvasElement.attr('fill', Nanomunchers.boardPainter.EATEN_COLOR);
+}

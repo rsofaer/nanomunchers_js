@@ -15,16 +15,36 @@ Board = function(xSize, ySize, numNodes, edgeProb){
       this.nodes.push(new Node(i,j));
     }
   }
+
   // Pick a random subset of size numNodes.
   Array.shuffle(this.nodes);
   this.nodes.splice(numNodes, this.nodes.length - numNodes);
   // Create random edges based on edgeProb.
-  this.edges = []
+  this.edges = [];
   for(var i = 0; i < this.nodes.length; i++){
     for(var j = i; j < this.nodes.length; j++){
       if(this.nodes[i].isNeighbor(this.nodes[j])){
         if(Math.random() <= edgeProb){
           this.edges.push([i,j]);
+          if(this.nodes[i].x === this.nodes[j].x){
+            // Higher y value is above
+            if(this.nodes[i].y === this.nodes[j].y + 1){
+              this.nodes[j]["U"] = this.nodes[i]
+                this.nodes[i]["D"] = this.nodes[j]
+            }else{
+              this.nodes[j]["D"] = this.nodes[i]
+                this.nodes[i]["U"] = this.nodes[j]
+            }
+          }else if(this.nodes[i].y === this.nodes[j].y){
+            // Higher x value is to the left
+            if(this.nodes[i].x === this.nodes[j].x + 1){
+              this.nodes[i]["R"] = this.nodes[j];
+              this.nodes[j]["L"] = this.nodes[i];
+            }else{
+              this.nodes[i]["L"] = this.nodes[j];
+              this.nodes[j]["R"] = this.nodes[i];
+            }
+          }
         }
       }
     }

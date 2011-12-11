@@ -168,14 +168,16 @@ var Mothership = function(paper, size, startPos, colorscheme){
   }.bind(this)
   // Process key press.
   this.onKey = function(flag, theKey){
-    if("keydown" === flag && theKey === "FIRE"){
+    if("keydown" === flag && theKey === "FIRE" && this.keysDown[theKey] === 0){
       if(this.currentTarget !== undefined){
         var program = Muncher.randomProgram();
         var muncher = new MuncherView(GameUI.paper, 30, this.currentTarget,
                                       program, COLOR_SCHEMES[colorscheme][1]);
         //muncher.startGlowing();
       }
-    }else if("keydown" === flag){
+    }
+    
+    if("keydown" === flag){
       if(this.keysDown[theKey] === 0)
       {
         this.keysDown[theKey] = 1;

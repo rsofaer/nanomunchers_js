@@ -184,3 +184,90 @@ function glowTargets(){
   player1Target.canvasElement.glow({color: "blue"})
   player2Target.canvasElement.glow({color: "green"})
 }
+
+// Nanomuncher UI object.
+var Muncher = function(paper, size, program, startPos){
+  var muncherColor = "#FFFACD"; // This is 'lemonchiffon', bitch.
+  var muncherCoreColor = "#A000FF";
+  // Hard-coded order of canvas elements.
+  var canvasElementMap = {
+    "RIGHT": 0, "UP": 1, "LEFT": 2, "DOWN": 3, "CENTER" : 4
+  };
+
+  // The nanomuncher program. Used to render the instruction order.
+  this.program = program;
+  // The initial position of the nanomuncher in paper coordinates.
+  this.startPos = new Point(startPos.x, startPos.y);
+  // Setup the nanomuncher graphics.
+  this.canvasElement = function(){
+    var set = paper.set();
+    var rectDim = size / 3;
+    var rectHalfDim = rectDim / 2;
+    var textSize = size / 3.25;
+    var programOrder = [
+      program.indexOf("R") + 1,
+      program.indexOf("U") + 1,
+      program.indexOf("L") + 1,
+      program.indexOf("D") + 1
+      ];
+    set.push(
+        // Right.
+        paper.rect(startPos.x + rectHalfDim,
+                   startPos.y - rectHalfDim,
+                   rectDim, rectDim).attr("fill", muncherColor),
+        // Up.
+        paper.rect(startPos.x - rectHalfDim,
+                   startPos.y - rectHalfDim - rectDim,
+                   rectDim, rectDim).attr("fill", muncherColor),
+        // Left.
+        paper.rect(startPos.x - rectHalfDim - rectDim,
+                   startPos.y - rectHalfDim,
+                   rectDim, rectDim).attr("fill", muncherColor),
+        // Down.
+        paper.rect(startPos.x - rectHalfDim,
+                   startPos.y + rectHalfDim,
+                   rectDim, rectDim).attr("fill", muncherColor),
+        // Center.
+        paper.rect(startPos.x - rectHalfDim,
+                   startPos.y - rectHalfDim,
+                   rectDim, rectDim).attr("fill", muncherCoreColor),
+        // Right.
+        paper.text(startPos.x + rectDim, startPos.y, programOrder[0]).attr({
+          "font-family" : "Courier", "font-size" : textSize
+          }),
+        // Up.
+        paper.text(startPos.x, startPos.y - rectDim, programOrder[1]).attr({
+          "font-family" : "Courier", "font-size" : textSize
+          }),
+        // Left.
+        paper.text(startPos.x - rectDim, startPos.y, programOrder[2]).attr({
+          "font-family" : "Courier", "font-size" : textSize
+          }),
+        // Down.
+        paper.text(startPos.x, startPos.y + rectDim, programOrder[3]).attr({
+          "font-family" : "Courier", "font-size" : textSize
+          })
+        );
+    return set;
+  }()
+  // Create glow for core.
+  this.coreGlow = this.canvasElement[canvasElementMap["CENTER"]].glow(
+      { "color" : muncherCoreColor, "fill" : true, });
+  // Glow state flag.
+  this.glowState = 0;
+  // Move the nanomuncher to a new location using the given instruction.
+  this.moveTo = function(pos, dir){
+  }.bind(this)
+  // The timer service.
+  this.timerService = function(){
+    if(this.glowState === 0){
+      this.coreGlow.animate({"transform" : "s1.2"}, 50);
+    }
+    else if(this.glowState === 1){
+      this.coreGlow.animate({"transform" : "s2"}, 50);
+    }
+    // Flip glow state.
+    ++this.glowState %= 2;
+  }.bind(this)
+}
+

@@ -165,9 +165,12 @@ var Mothership = function(paper, size, startPos, colorscheme){
     if(this._currentTarget_ !== node){
       if(this._currentTargetGlow_ !== undefined){
         this._currentTargetGlow_.remove()
+        this._currentTargetGlow_ = undefined;
       }
       this._currentTarget_ = node;
-      this._currentTargetGlow_ = node.canvasElement.glow(this.targetGlowParams);
+      if(node !== undefined){
+        this._currentTargetGlow_ = node.canvasElement.glow(this.targetGlowParams);
+      }
     }
   });
 }

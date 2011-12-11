@@ -66,9 +66,15 @@ Board = function(nodes, edges, xSize, ySize){
   this.xSize = xSize;
   this.ySize = ySize;
 }
+var MAX_TARGET_DIST = 120;
 Board.prototype.closestNode = function(point){
   return Array.min(this.nodes, function(e){
-    return distance(point, e);
+    var dist = distance(point, e);
+    if(dist > MAX_TARGET_DIST){
+      return Number.MAX_VALUE;
+    }else{
+      return dist;
+    }
   });
 }
 

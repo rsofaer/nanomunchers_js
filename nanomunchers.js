@@ -18,9 +18,9 @@ var GameUI = {
                 this.paper.canvas.style["border"] = "solid 1px";
 
                 this.player1 = new Mothership(this.paper, 50,
-                                              new Point(300, 300))
+                                              new Point(300, 300), "SEA")
                 this.player2 = new Mothership(this.paper, 50,
-                                              new Point(500, 300))
+                                              new Point(500, 300), "FOREST")
 
                 board = Nanomunchers.boardGenerator.generateBoard(10,8,10*8/1.8, 0.75)
                 Nanomunchers.boardPainter.drawBoard(this.paper, board);
@@ -58,7 +58,12 @@ var GameUI = {
                  "RETURN":    function(flag){this.player2.onKey(flag)}}
 }
 
-var Mothership = function(paper, size, startPos){
+var Mothership = function(paper, size, startPos, colorscheme){
+  // Available schemes.
+  var COLOR_SCHEMES = {
+    "SEA":    [ "lightblue",  "blue" ],
+    "FOREST": [ "lightgreen", "green" ],
+  };
   // Time between animation updates.
   var TIMER_UPDATE_MS = 50;
   // Angle to rotate per animation step.
@@ -77,7 +82,7 @@ var Mothership = function(paper, size, startPos){
   this.shipCoord = new Point(startPos.x, startPos.y);
   this.animationOffset = new Point(0, 0);
   // Setup the ship graphics.
-  this.canvasElement = function(paper, size, startPos){
+  this.canvasElement = function(){
     var set = paper.set();
     var halfSize = size / 2;
     var triangleSide = (3 / Math.sqrt(3)) * halfSize;
@@ -93,8 +98,10 @@ var Mothership = function(paper, size, startPos){
         paper.circle(startPos.x, startPos.y, halfSize * 0.8),
         paper.path(trianglePath)
         );
+    set[0].attr("fill", COLOR_SCHEMES[colorscheme][0]);
+    set[1].attr("fill", COLOR_SCHEMES[colorscheme][1]);
     return set;
-  }(paper, size, startPos)
+  }()
   // Map of keys pressed.
   this.keysDown = {"UP": 0, "DOWN": 0, "LEFT": 0, "RIGHT": 0};
   // Animate the ship by an offset.

@@ -98,7 +98,10 @@ ClipView.prototype.popMuncher = function(){
                                   this.POP_MUNCHER_MS,
                                   function(){this.currentMuncher++}.bind(this));
       // Eject the last muncher.
-      var ejectOffset = this.interval.mul(this.numMunchers);
+      var paperSizeY = new Point(0, this.paper.height);
+      var currentLocY = new Point(0, muncherView.loc.y);
+      var ejectOffset = paperSizeY.add(currentLocY.add(this.interval.mul(
+            this.numMunchers)));
       muncher.animate({transform: "T" +
                        muncherView.animationOffset.add(ejectOffset).toS()},
                       this.POP_MUNCHER_MS, "<",

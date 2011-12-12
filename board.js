@@ -55,6 +55,7 @@ Board = function(xSize, ySize, numNodes, edgeProb){
 var Node = function(x_, y_){
   this.x = x_;
   this.y = y_;
+  this.munchedBy = null;
   // Test if another node is the same.
   this.isSame = function(nodeB){
     return (this.x === nodeB.x) && (this.y === nodeB.y)
@@ -68,6 +69,12 @@ var Node = function(x_, y_){
     return (this.x === nodeB.x && Math.abs(this.y - nodeB.y) === 1) ||
            (this.y === nodeB.y && Math.abs(this.x - nodeB.x) === 1);
   };
+  // Consume this node.
+  this.munch = function(munchedBy){
+    this.munchedBy = munchedBy;
+  };
+  // Is munched?
+  this.munched = function(){ return this.munchedBy !== null; };
 }
 Node.prototype.add = Point.prototype.add;
 Node.prototype.sub = Point.prototype.sub;

@@ -2,7 +2,7 @@ var Nanomunchers = {
 }
 
 // Time between animation updates.
-var TIMER_UPDATE_MS = 50;
+var ANIMATION_TIMER_MS = 50;
 
 // Time between game timesteps.
 var GAME_TIMER_MS = 1000;
@@ -17,6 +17,9 @@ Point.prototype.add = function(point){
 }
 Point.prototype.sub = function(point){
   return new Point(this.x - point.x, this.y - point.y);
+}
+Point.prototype.mul = function(scalar){
+  return new Point(this.x*scalar, this.y*scalar);
 }
 Point.prototype.toS = function(){
   return this.x + "," + this.y;
@@ -35,22 +38,38 @@ var GameUI = {
                                               new Point(300, 300), "SEA")
                 this.player2 = new PlayerView(this.paper, 50,
                                               new Point(500, 300), "FOREST")
+
+                // Create clips.
+                var CLIP_WIDTH = 80;
+                var NUM_MUNCHERS = 8;
+                this.player1clip = new ClipView(this.paper, new Point(0,0), new Point(CLIP_WIDTH, YSIZE),
+                                                NUM_MUNCHERS, this.player1.colorScheme[1])
+                                                
+                this.player2clip = new ClipView(this.paper, new Point(XSIZE - CLIP_WIDTH, 0),
+                                                       new Point(XSIZE, YSIZE),
+                                                NUM_MUNCHERS, this.player2.colorScheme[1])
+                
                 // Make board and its view.
-                this.board = new Board(10,8,10*8/1.8, 0.75)
+                this.board = new Board(10,8,Math.floor(10*8/1.8), 0.75)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
                 // Create simulation.
                 this.simulator = new Simulator(this.board);
+                // Holder for muncher UI items.
+                this.muncherViews = []
                 // Set key handlers.
                 $(document).keydown(this.onKey.bind(this));
                 $(document).keyup(this.onKey.bind(this));
                 // Set timer sevice to handle input.
                 this.timedObjects = [this.player1, this.player2];
                 this.timer = setInterval(this.timerService.bind(this),
-                                         TIMER_UPDATE_MS);
+                                         ANIMATION_TIMER_MS);
                 // Enforce z-order.
                 this.player1.canvasElement.toFront();
                 this.player2.canvasElement.toFront();
                 this.boardView.canvasElements.toBack();
+                // reissb -- 20111211 -- Fix for z-order issue.
+//                this.boardView.nodes[0].canvasElement.insertAfter(
+//                    this.boardView.canvasElements[this.board.numNodes - 1]);
               },
 
   onKey: function(e){
@@ -123,9 +142,10 @@ var GameUI = {
     if("keydown" === eventType && !(KeysDown[keyName])){
       if(player.currentTarget !== undefined){
         var program = Muncher.randomProgram();
-        var muncher = new MuncherView(GameUI.paper, 30, player.currentTarget,
+        var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
                                       program, player.colorScheme[1]);
-        muncher.canvasElement.insertBefore(this.boardView.canvasElements);
+        muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
+        this.muncherViews.push(muncherView);
         //muncher.startGlowing();
       }
     }

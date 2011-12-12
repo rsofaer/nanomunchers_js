@@ -12,7 +12,7 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
     var clipBottomLeft = topLeft.add(this.interval.mul(numMunchers));
     clipBottomLeft.y += spacing/2;
     var clipBottomRight = new Point(bottomRight.x, clipBottomLeft.y);
-    
+
     this.currentMuncher = 1;
 
     // Make sure we open the door inwards.
@@ -25,9 +25,9 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
     }
 
     this.openDoorTime = 1000;
-    
+
     var topRight = new Point(bottomRight.x, topLeft.y);
-    
+
     // Draw sides and top of clip:
     this.clipSidesPath = paper.path("M" + clipBottomLeft.toS() + " " +
                                       "L" + topLeft.toS() + " " +
@@ -37,7 +37,7 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
     this.doorPath = paper.path("M" + clipBottomLeft.toS() + " " +
                                "L" + clipBottomRight.toS());
     this.munchers = [];
-    
+
     this.canvasElements = paper.set()
     for(var i = 0; i < numMunchers; i++){
       var program = Muncher.randomProgram();
@@ -61,7 +61,9 @@ ClipView.prototype.popMuncher = function(){
   window.setTimeout(function(){
     var muncher = this.canvasElements.pop();
     this.canvasElements.animate({transform: "T" + this.interval.mul(this.currentMuncher).toS()},500, function(){this.currentMuncher++}.bind(this))
-    muncher.animate({transform: "T" + this.interval.mul(10).toS()},500, "<", function(){ this.closeDoor()}.bind(this));
-  }.bind(this), this.openDoorTime*0.5);
+    muncher.animate({transform: "T" + this.interval.mul(10).toS()},500, "<",
+      function(){ window.setTimeout(function(){this.closeDoor()}.bind(this), this.openDoorTime*0.2);
+      }.bind(this));
+  }.bind(this), this.openDoorTime*0.2);
   // TODO: return muncher program
 }

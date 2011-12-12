@@ -14,6 +14,8 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
     var clipBottomRight = new Point(bottomRight.x, clipBottomLeft.y);
 
     this.currentMuncher = 1;
+    this.totalMunchers = numMunchers;
+    this.ready = true;
 
     // Make sure we open the door inwards.
     var hinges = [clipBottomLeft, clipBottomRight];
@@ -36,13 +38,14 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
 
     this.doorPath = paper.path("M" + clipBottomLeft.toS() + " " +
                                "L" + clipBottomRight.toS());
-    this.munchers = [];
-
+    this.muncherViews = [];
     this.canvasElements = paper.set()
+
     for(var i = 0; i < numMunchers; i++){
       var program = Muncher.randomProgram();
       var muncherView = new MuncherView(GameUI.paper, radius*2, currentSpot,
                                     program, playerColor);
+      this.muncherViews.push(muncherView);
       this.canvasElements.push(muncherView.canvasElement);
       currentSpot = currentSpot.add(this.interval);
     }
@@ -57,13 +60,21 @@ ClipView.prototype.closeDoor = function(callback){
   this.doorPath.animate({transform: "R" + 0 + "," + this.doorHinge.toS()}, 200, "<", callback)
 }
 ClipView.prototype.popMuncher = function(){
-  this.openDoor();
-  window.setTimeout(function(){
-    var muncher = this.canvasElements.pop();
-    this.canvasElements.animate({transform: "T" + this.interval.mul(this.currentMuncher).toS()},500, function(){this.currentMuncher++}.bind(this))
-    muncher.animate({transform: "T" + this.interval.mul(10).toS()},500, "<",
-      function(){ window.setTimeout(function(){this.closeDoor()}.bind(this), this.openDoorTime*0.2);
-      }.bind(this));
-  }.bind(this), this.openDoorTime*0.2);
-  // TODO: return muncher program
+  if(this.ready && this.muncherViews.length > 0){
+    this.ready = false;
+    this.openDoor();
+    window.setTimeout(function(){
+      var muncher = this.canvasElements.pop();
+      this.canvasElements.animate({transform: "T" + this.interval.mul(this.currentMuncher).toS()},500, function(){this.currentMuncher++}.bind(this))
+      muncher.animate({transform: "T" + this.interval.mul(10).toS()},500, "<",
+        function(){ window.setTimeout(function(){
+          this.closeDoor(function(){
+            this.ready = this.currentMuncher <= this.totalMunchers;}.bind(this));
+          }.bind(this), this.openDoorTime*0.2);
+        }.bind(this));
+    }.bind(this), this.openDoorTime*0.2);
+    // TODO: return muncher program
+    var muncherView = this.muncherViews.pop();
+    return muncherView.program;
+  }
 }

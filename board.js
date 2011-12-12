@@ -81,5 +81,6 @@ var Node = function(x_, y_){
 }
 Node.prototype.add = Point.prototype.add;
 Node.prototype.sub = Point.prototype.sub;
+Node.prototype.toS = Point.prototype.toS;
 bindAllFunctions(Node)
 

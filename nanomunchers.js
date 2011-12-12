@@ -45,10 +45,10 @@ var GameUI = {
                 // Create clips.
                 var CLIP_WIDTH = 80;
                 var NUM_MUNCHERS = 8;
-                this.player1clip = new ClipView(this.paper, new Point(0,0), new Point(CLIP_WIDTH, YSIZE),
+                this.player1.clip = new ClipView(this.paper, new Point(0,0), new Point(CLIP_WIDTH, YSIZE),
                                                 NUM_MUNCHERS, this.player1.colorScheme[1])
 
-                this.player2clip = new ClipView(this.paper, new Point(XSIZE - CLIP_WIDTH, 0),
+                this.player2.clip = new ClipView(this.paper, new Point(XSIZE - CLIP_WIDTH, 0),
                                                        new Point(XSIZE, YSIZE),
                                                 NUM_MUNCHERS, this.player2.colorScheme[1])
 
@@ -162,20 +162,24 @@ var GameUI = {
 
   fireMuncher: function(eventType, keyName, player){
     if("keydown" === eventType && !(KeysDown[keyName])){
-      if(player.currentTarget !== undefined){
-        var muncher = this.simulator.dropMuncher(player,
-            player.currentTarget.model, Muncher.randomProgram());
-        var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
-                                           muncher.program, player.colorScheme[1]);
-        muncherView.model = muncher;
-        // reissb -- 20111211 -- Fix for z-order issue.
-        muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
-        this.muncherViews.push(muncherView);
-        this.boardView.nodes[0].canvasElement.insertAfter(
-            this.boardView.canvasElements[1]);
+      if(player.currentTarget !== undefined && player.clip.ready){
+        var program = player.clip.popMuncher()
+        if(program){
+          var muncher = this.simulator.dropMuncher(player,
+              player.currentTarget.model, program);
+          var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
+                                             program, player.colorScheme[1]);
+          muncherView.model = muncher;
+          // reissb -- 20111211 -- Fix for z-order issue.
+          muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
+          this.muncherViews.push(muncherView);
+          this.boardView.nodes[0].canvasElement.insertAfter(
+              this.boardView.canvasElements[1]);
 
-        // rjs454 -- 20111212 -- Glowing is too CPU intensive
-        //muncherView.startGlowing();
+          // rjs454 -- 20111212 -- Glowing is too CPU intensive
+          //muncherView.startGlowing();
+          //
+        }
       }
     }
   }

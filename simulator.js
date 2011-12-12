@@ -21,11 +21,11 @@ var Simulator = function(board){
     // Hash munchers based on current node.
     var conflictMap = {}
     this.munchers.forEach(function(muncher){
-        code = muncher.node;
-        if(conflictMap[muncher.node] === undefined){
-          conflictMap[muncher.node] = [];
+        code = muncher.node.toS();
+        if(conflictMap[code] === undefined){
+          conflictMap[code] = [];
         }
-        conflictMap[muncher.node].push(muncher);
+        conflictMap[code].push(muncher);
       }, this)
 
     // Resolve conflicts using precedence rules.
@@ -47,7 +47,7 @@ var Simulator = function(board){
           nodeConflict.forEach(function(e){
             e.dead = true;
             this.munchers.splice(this.munchers.indexOf(e), 1);
-          });
+          }, this);
         }
       }
     }

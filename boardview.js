@@ -23,23 +23,25 @@ var BoardView = function(paper, board, nodeRadius, edgeLength){
 
   // Create the graphics set.
   this.paper.setStart();
-  // Draw nodes and send to back.
+  // Draw nodes.
   this.nodes.forEach(function(e){
       var circle = this.paper.circle(e.x, e.y, this.nodeRadius);
       circle.attr("fill", COLOR_SCHEME["CIRCLE_COLOR"]);
-      circle.toBack();
       e.canvasElement = circle;
       }.bind(this));
-  // Draw edges and send to back.
+  // Draw edges.
   board.edges.forEach(function(e){
       var node0 = this.nodes[e[0]];
       var node1 = this.nodes[e[1]];
       var line = this.paper.path("M" + node0.x + "," + node0.y +
                                  "L" + node1.x + "," + node1.y);
       line.attr('stroke', COLOR_SCHEME["LINE_COLOR"]);
-      line.toBack();
       }.bind(this));
   this.canvasElements = this.paper.setFinish();
+  // reissb -- 20111211 -- Fix for strange z-order issue where first
+  //   node appeared at the front of the z-order.
+  var lastCanvasEle = this.canvasElements[this.canvasElements.length - 1];
+  this.nodes[0].canvasElement.insertAfter(lastCanvasEle);
 }
 
 // The target distance controls the farthest that a ship can be while

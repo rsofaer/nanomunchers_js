@@ -75,6 +75,19 @@ Array.prototype.detect = function(f){
   }
 }
 
+SoundsPlaying = {};
+
 function playSound(soundID){
-  $("#sounds #" + soundID)[0].Play();
+  log(SoundsPlaying[soundID]);
+  if(SoundsPlaying[soundID]){
+    soundID +="_"
+  }
+  SoundsPlaying[soundID] = true;
+  log(soundID)
+  var ele = $("#sounds #" + soundID)[0];
+  ele.Play();
+  window.setTimeout(function(){
+    SoundsPlaying[soundID] = false;
+  },Number(ele.name)*1000);
 }
+

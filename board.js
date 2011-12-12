@@ -51,21 +51,6 @@ Board = function(xSize, ySize, numNodes, edgeProb){
   }
 }
 
-// The target distance controls the farthest that a ship can be while
-// targeting a node.
-Board.prototype.closestNode = function(point){
-  var MAX_TARGET_DIST = 120;
-  return Array.min(this.nodes, function(e){
-    var dist = e.distance(point);
-    if(dist > MAX_TARGET_DIST){
-      return Number.MAX_VALUE;
-    }
-    else{
-      return dist;
-    }
-  });
-}
-
 // A node is 2d point location.
 var Node = function(x_, y_){
   this.x = x_;

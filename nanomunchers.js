@@ -18,24 +18,28 @@ Point.prototype.toS = function(){
 
 var GameUI = {
   initialize: function(){
+                // Setup graphics.
                 var XSIZE = 800;
                 var YSIZE = 600;
                 this.paper = Raphael("game-screen", XSIZE, YSIZE)
                 this.paper.canvas.style["background-color"] = "lightgray";
                 this.paper.canvas.style["border"] = "solid 1px";
-
+                // Create players.
                 this.player1 = new Mothership(this.paper, 50,
                                               new Point(300, 300), "SEA")
                 this.player2 = new Mothership(this.paper, 50,
                                               new Point(500, 300), "FOREST")
-
+                // Make board and its view.
                 this.board = new Board(10,8,10*8/1.8, 0.75)
-                Nanomunchers.boardPainter.drawBoard(this.paper, this.board);
+                this.boardView = new BoardView(this.paper, this.board, 15, 60);
 
+                // Set key handlers.
                 $(document).keydown(this.onKey.bind(this));
                 $(document).keyup(this.onKey.bind(this));
-                this.timer = setInterval(this.timerService.bind(this), TIMER_UPDATE_MS);
+                // Set timer sevice to handle input.
                 this.timedObjects = [this.player1, this.player2];
+                this.timer = setInterval(this.timerService.bind(this),
+                                         TIMER_UPDATE_MS);
               },
 
   onKey: function(e){
@@ -84,7 +88,7 @@ var GameUI = {
   timerService: function(){
     this.timedObjects.forEach(function(player){
       player.timerService();
-      var closestNode = this.board.closestNode(player.loc);
+      var closestNode = this.boardView.closestNode(player.loc);
       player.currentTarget = closestNode;
     }.bind(this));
   }

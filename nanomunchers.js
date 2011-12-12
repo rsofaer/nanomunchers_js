@@ -31,7 +31,6 @@ var GameUI = {
                 this.paper.canvas.style["background-color"] = "lightgray";
                 this.paper.canvas.style["border"] = "solid 1px";
                 // Create players.
-
                 this.player1 = new PlayerView(this.paper, 50,
                                               new Point(300, 300), "SEA")
                 this.player2 = new PlayerView(this.paper, 50,
@@ -39,7 +38,8 @@ var GameUI = {
                 // Make board and its view.
                 this.board = new Board(10,8,10*8/1.8, 0.75)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
-
+                // Create simulation.
+                this.simulator = new Simulator(this.board);
                 // Set key handlers.
                 $(document).keydown(this.onKey.bind(this));
                 $(document).keyup(this.onKey.bind(this));
@@ -48,9 +48,9 @@ var GameUI = {
                 this.timer = setInterval(this.timerService.bind(this),
                                          TIMER_UPDATE_MS);
                 // Enforce z-order.
-                this.boardView.canvasElements.toBack();
                 this.player1.canvasElement.toFront();
                 this.player2.canvasElement.toFront();
+                this.boardView.canvasElements.toBack();
               },
 
   onKey: function(e){

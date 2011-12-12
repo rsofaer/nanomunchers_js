@@ -25,6 +25,9 @@ Point.prototype.toS = function(){
   return this.x + "," + this.y;
 }
 
+// Map of keys pressed.
+var KeysDown = {};
+
 var GameUI = {
   initialize: function(){
                 // Setup graphics.
@@ -76,7 +79,6 @@ var GameUI = {
                  keyCode -= KEYCODES.CAPS_OFFSET;
                }
                var keyName = KEYCODES[keyCode];
-               this.updateKeysDown(e.type, keyName);
 
                // Prevent defaults for arrows.
                var nodefaultKeys = ["UP", "LEFT", "DOWN", "RIGHT", "SPACEBAR"];
@@ -86,20 +88,17 @@ var GameUI = {
                if(this.keyMappings[keyName] !== undefined){
                  this.keyMappings[keyName].apply(this, [e.type, keyName]);
                }
+               this.updateKeysDown(e.type, keyName);
              },
   updateKeysDown: function(eventType, keyName){
     if("keydown" === eventType){
-      if(KeysDown[keyName])
-      {
-        KeysDown[keyName] = 1;
-      }
+      KeysDown[keyName] = true;
     }
     else if("keyup" === eventType){
-      KeysDown[keyName] = 0;
+      KeysDown[keyName] = false;
     }
   },
 
-  keysDown: {},
   keyMappings: { // Player 1.
                  "W":         function(flag){this.player1.onKey(flag, "UP")},
                  "A":         function(flag){this.player1.onKey(flag, "LEFT")},
@@ -149,5 +148,3 @@ var GameUI = {
 }
 bindAllFunctions(GameUI);
 
-// Map of keys pressed.
-var KeysDown = {};

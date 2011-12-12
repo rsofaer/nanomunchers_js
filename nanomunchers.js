@@ -53,7 +53,10 @@ var GameUI = {
                                                 NUM_MUNCHERS, this.player2.colorScheme[1])
 
                 // Make board and its view.
-                this.board = new Board(10,8,Math.floor(10*8/1.8), 0.75)
+                var XNODESIZE = 10;
+                var YNODESIZE = 8;
+                this.board = new Board(XNODESIZE, YNODESIZE,
+                                       Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
                 // Create simulation.
                 this.simulator = new Simulator(this.board);
@@ -91,6 +94,9 @@ var GameUI = {
                }
                this.updateKeysDown(e.type, keyName);
              },
+
+  // Mark keys as pressed so that we can distinguish
+  // between the first "keydown" and repeats.
   updateKeysDown: function(eventType, keyName){
     if("keydown" === eventType){
       KeysDown[keyName] = true;
@@ -113,19 +119,8 @@ var GameUI = {
                  "RIGHT":     function(flag){this.player2.onKey(flag, "RIGHT")},
                  "RETURN":    function(flag, keyName){this.fireMuncher(flag, keyName, this.player2)}},
 
-  addTimedObject: function(obj){
-    if(this.timedObjects.indexOf(obj) < 0){
-      this.timedObjects.push(obj);
-    }
-  },
-
-  removeTimedObject: function(obj){
-    var idx = this.timedObjects.indexOf(obj);
-    if(idx >= 0){
-      this.timedObjects.splice(idx, 1);
-    }
-  },
-
+  // The animation timer.  This timer handles re-targeting
+  // and prompts the players to move.
   timerService: function(){
     this.timedObjects.forEach(function(player){
       player.timerService();
@@ -161,9 +156,13 @@ var GameUI = {
   },
 
   fireMuncher: function(eventType, keyName, player){
+    // Check for keydown and KeysDown to avoid repeat firings.
     if("keydown" === eventType && !(KeysDown[keyName])){
+      // Make sure the player has a target and is not already firing.
       if(player.currentTarget !== undefined && player.clip.ready){
+        // Get a program from the clip, and set off the clip animation.
         var program = player.clip.popMuncher()
+        // The clip will return false if there is no muncher remaining.
         if(program){
           var muncher = this.simulator.dropMuncher(player,
               player.currentTarget.model, program);

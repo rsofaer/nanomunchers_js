@@ -14,16 +14,21 @@
 <style>
   .menuDiv {background-image:url('game-over.jpg');height:600px}
   .inputs {float:center;position:absolute;align:center;}
+  
 </style>
 </head>
 
 
 <div id='_menu' class='menuDiv'>
-<div id='_input' class='inputs'>
-<input type='text' id='_p1name'></input></br>
-<input type='text' id='_p2name'></input></br>
-<button id='btnStart'> start </button>
-</div>
+  <div id='_input' class='inputs'>
+    <label for='_p1name' style='color:lightblue'>Player1's Name:</label>
+    <input type='text' id='_p1name'></input></br>
+    <label for='_p2name' style='color:lightblue'>Player2's Name:</label>
+    <input type='text' id='_p2name'></input></br>
+    <div id='_buttonDiv' style='padding-left:105px;'>
+      <button id='btnStart'> start </button>
+    </div>
+  </div>
 </div>
 <script> 
   $('#btnStart').click(function() {

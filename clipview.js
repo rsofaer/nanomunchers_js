@@ -7,23 +7,20 @@
 ///     nanomunchers did not seem appealing.
 ///   </para>
 /// <remarks>
-var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
-  var width = bottomRight.x - topLeft.x;
-  var height = bottomRight.y - topLeft.y;
+var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
+  this.size = size;
+  var topLeft = topLeft;
+  var clipBottomRight = topLeft.add(size);
+  var clipBottomLeft = new Point(topLeft.x, clipBottomRight.y);
+  var topRight = new Point(clipBottomRight.x, topLeft.y);
 
-  // Spacing on each side of munchers.
-  var spacing = 20;
-  var radius = (width - spacing*2)/2;
-  // Step down clip placing nanomunchers.
-  var currentSpot = new Point(topLeft.x + spacing + radius,
-                              topLeft.y + spacing + radius);
-  this.interval = new Point(0, radius*2 + spacing);
-
-
-  // Compute bottom vertices for clip door animation.
-  var clipBottomLeft = topLeft.add(this.interval.mul(numMunchers));
-  clipBottomLeft.y += spacing/2;
-  var clipBottomRight = new Point(bottomRight.x, clipBottomLeft.y);
+  // Vertical spacing and size of munchers.
+  var spacing = Math.floor(size.y / numMunchers);
+  var radius = Math.floor(spacing * 0.75) / 2;
+  // Compute origin and step down clip placing nanomunchers.
+  var currentSpot = new Point(topLeft.x + (size.x / 2),
+                              topLeft.y + spacing / 2);
+  this.interval = new Point(0, spacing);
 
   this.currentMuncher = 1;
   this.totalMunchers = numMunchers;
@@ -40,8 +37,6 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
   }else{
     this.rotationDegrees = -100;
   }
-  // Compute final point of the clip.
-  var topRight = new Point(bottomRight.x, topLeft.y);
 
   // Draw sides and top of clip:
   this.clipSidesPath = paper.path("M" + clipBottomLeft.toS() + " " +

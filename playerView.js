@@ -7,13 +7,11 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   };
   this.colorScheme = COLOR_SCHEMES[colorscheme];
   // Angle to rotate per animation step.
-  var SHIP_ROTATION_SPEED = 18;
+  var SHIP_ROTATION_SPEED = 36;
   // Additional speed when moving.
-  var SHIP_ROTATION_SPEED_MOVE = 3;
+  var SHIP_ROTATION_SPEED_MOVE = 6;
   // Ship translation speed.
-  var SHIP_SPEED = 5;
-  // Time to animate.
-  var ANIMATION_TIME = 25;
+  var SHIP_SPEED = 10;
   // Current ship angle.
   this.shipAngle = 0;
   // Bounding box of ship.
@@ -56,7 +54,7 @@ var PlayerView= function(paper, size, startPos, colorscheme){
     var tformStr = "t" + offset.x + "," + offset.y +
                    "r" + this.shipAngle + "," +
                          this.shipCoord.x + "," + this.shipCoord.y;
-    this.canvasElement.animate( { transform: tformStr }, ANIMATION_TIME)
+    this.canvasElement.animate( { transform: tformStr }, ANIMATION_TIMER_MS)
   }.bind(this)
 
   /// <summary> Timer service routine. </summary>

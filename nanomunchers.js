@@ -217,7 +217,7 @@ var GameUI = {
         if(program){
           var muncher = this.simulator.dropMuncher(player,
               player.currentTarget.model, program);
-          var muncherView = new MuncherView(GameUI.paper, 30,
+          var muncherView = new MuncherView(GameUI.paper, 20,
                                             player.currentTarget,
                                             program, player.colorScheme[1]);
           muncherView.model = muncher;

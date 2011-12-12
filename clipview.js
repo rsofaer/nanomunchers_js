@@ -9,6 +9,7 @@
 /// <remarks>
 var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
   this.size = size;
+  this.paper = paper;
   var topLeft = topLeft;
   var clipBottomRight = topLeft.add(size);
   var clipBottomLeft = new Point(topLeft.x, clipBottomRight.y);
@@ -16,14 +17,14 @@ var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
 
   // Vertical spacing and size of munchers.
   var spacing = Math.floor(size.y / numMunchers);
-  var radius = Math.floor(spacing * 0.75) / 2;
+  var radius = Math.floor((spacing * 0.75) / 2);
   // Compute origin and step down clip placing nanomunchers.
-  var currentSpot = new Point(topLeft.x + (size.x / 2),
-                              topLeft.y + spacing / 2);
+  var currentSpot = new Point(topLeft.x + Math.floor(size.x / 2),
+                              topLeft.y + Math.floor(spacing / 2));
   this.interval = new Point(0, spacing);
 
   this.currentMuncher = 1;
-  this.totalMunchers = numMunchers;
+  this.numMunchers = numMunchers;
   this.ready = true;
 
   // Make sure we open the door inwards.
@@ -84,6 +85,8 @@ ClipView.prototype.closeDoor = function(callback){
 /// <summary> Eject muncher at the botton of the clip. </summary>
 ClipView.prototype.popMuncher = function(){
   if(this.ready && this.muncherViews.length > 0){
+    // Return muncher program for the ejected muncher.
+    var muncherView = this.muncherViews.pop();
     this.ready = false;
     this.openDoor();
     // Callback to perform shift down animation and eject animation.
@@ -95,19 +98,19 @@ ClipView.prototype.popMuncher = function(){
                                   this.POP_MUNCHER_MS,
                                   function(){this.currentMuncher++}.bind(this));
       // Eject the last muncher.
-      muncher.animate({transform: "T" + this.interval.mul(10).toS()},
+      var ejectOffset = this.interval.mul(this.numMunchers);
+      muncher.animate({transform: "T" +
+                       muncherView.animationOffset.add(ejectOffset).toS()},
                       this.POP_MUNCHER_MS, "<",
                       // Callback to see there are still munchers remaining.
                       function(){
                           window.setTimeout(function(){
                               this.closeDoor(function(){
                                   this.ready = this.currentMuncher <=
-                                               this.totalMunchers;}.bind(this));
+                                               this.numMunchers;}.bind(this));
                           }.bind(this), this.DOOR_OPEN_MS*0.15);
                       }.bind(this));
     }.bind(this), this.DOOR_OPEN_MS*0.15);
-    // Return muncher program for the ejected muncher.
-    var muncherView = this.muncherViews.pop();
     return muncherView.program;
   }
 }

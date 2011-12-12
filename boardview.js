@@ -17,7 +17,7 @@ var BoardView = function(paper, board, nodeRadius, edgeLength){
       var nodeRelY = (boardCenter.y - e.y) * this.edgeLength;
       var node = new Node(this.center.x + nodeRelX,
                           this.center.y + nodeRelY);
-      node.model =e;
+      node.model = e;
       this.nodes.push(node);
     }.bind(this));
 
@@ -60,3 +60,9 @@ BoardView.prototype.closestNode = function(point){
   });
 }
 
+BoardView.prototype.findViewForNode = function(node){
+  this.nodes.detect(function(nodeView){
+    return nodeView.model === node;
+    return false;
+  });
+}

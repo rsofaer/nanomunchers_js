@@ -10,7 +10,9 @@ var Simulator = function(board){
         return node === e.node;
         }, this);
     if(!occupied){
-      this.munchers.push(new Muncher(player, node, this.time, program));
+      var muncher = new Muncher(player, node, this.time, program);
+      this.munchers.push(muncher);
+      return muncher;
     }
   }.bind(this)
 
@@ -43,8 +45,9 @@ var Simulator = function(board){
           nodeConflict.shift();
           // Remove all others.
           nodeConflict.forEach(function(e){
-              this.munchers.splice(this.munchers.indexOf(e), 1);
-              });
+            e.dead = true;
+            this.munchers.splice(this.munchers.indexOf(e), 1);
+          });
         }
       }
     }
@@ -74,6 +77,9 @@ var Simulator = function(board){
             break;
           }
         }
+        if(blackHole){
+          muncher.dead = true;
+        }
         return !blackHole;
     });
   }.bind(this)
@@ -92,6 +98,14 @@ var Simulator = function(board){
     move();
     ++this.time;
   }.bind(this);
+
+  this.timerService = function(){
+    this.stepTime();
+    GameUI.moveMunchers();
+  }
+
+  this.timer = setInterval(this.timerService.bind(this),
+      GAME_TIMER_MS);
 }
 bindAllFunctions(Simulator);
 
@@ -108,6 +122,8 @@ var Muncher = function(player, startNode, startTime, program){
   this.programState = this.program;
   // The id of the owning player.
   this.player = player;
+
+  this.dead = false;
 }
 // Generate a random program.
 Muncher.randomProgram = function(){

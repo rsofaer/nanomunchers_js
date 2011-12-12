@@ -84,8 +84,13 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
     this.animationOffset = newPoint.sub(this.startPos);
     var tformStr = "t";
     tformStr += this.animationOffset.x + "," + this.animationOffset.y;
-    this.canvasElement.animate({transform: tformStr}, GAME_TIMER_MS);
+    this.canvasElement.animate({transform: tformStr}, GAME_TIMER_MS*0.8);
   }.bind(this)
+
+  this.die = function(){
+    this.canvasElement.remove();
+  }.bind(this)
+
   // The recursive glow routine.
   this.glowCallback = function(){
     console.log("whaat");

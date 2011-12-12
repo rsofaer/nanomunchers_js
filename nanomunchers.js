@@ -134,18 +134,38 @@ var GameUI = {
     }.bind(this));
   },
 
+  // A simulation time step just completed,
+  // set the munchers moving to their new homes.
+  moveMunchers: function(){
+    for(var i = 0; i < this.muncherViews.length;){
+      var e = this.muncherViews[i];
+      if(e.model.dead){
+        e.die();
+        this.muncherViews.splice(i,1);
+      }else{
+        var modelNodeIdx = this.board.nodes.indexOf(e.model.node);
+        e.moveTo(this.boardView.nodes[modelNodeIdx]);
+        i++;
+      }
+    }
+  },
+
   fireMuncher: function(eventType, keyName, player){
     if("keydown" === eventType && !(KeysDown[keyName])){
       if(player.currentTarget !== undefined){
-        var program = Muncher.randomProgram();
+        var muncher = this.simulator.dropMuncher(player, 
+            player.currentTarget.model, Muncher.randomProgram());
         var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
-                                      program, player.colorScheme[1]);
+                                           muncher.program, player.colorScheme[1]);
+        muncherView.model = muncher;
         // reissb -- 20111211 -- Fix for z-order issue.
         muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
         this.muncherViews.push(muncherView);
         this.boardView.nodes[0].canvasElement.insertAfter(
             this.boardView.canvasElements[1]);
-        //muncher.startGlowing();
+
+        // rjs454 -- 20111212 -- Glowing is too CPU intensive
+        //muncherView.startGlowing();
       }
     }
   }

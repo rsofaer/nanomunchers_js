@@ -1,4 +1,4 @@
-// A board is a set of nodes and edges.
+/// <summary> A board is a set of nodes and edges. </summary>
 Board = function(xSize, ySize, numNodes, edgeProb){
   this.xSize = typeof(xSize) !== 'undefined' ? xSize : 30;
   this.ySize = typeof(ySize) !== 'undefined' ? ySize : 20;
@@ -51,7 +51,12 @@ Board = function(xSize, ySize, numNodes, edgeProb){
   }
 }
 
-// A node is 2d point location.
+/// <summary> A node is 2d point location. </summary>
+/// <remarks>
+///   <para> Nodes contain toxic waste that must be munched by a
+///     player as the objective of the game.
+///   </para>
+/// </remarks>
 var Node = function(x_, y_){
   this.x = x_;
   this.y = y_;
@@ -79,6 +84,7 @@ var Node = function(x_, y_){
   // Is munched?
   this.munched = function(){ return this.munchedBy !== null; };
 }
+// Inherit mathematical helpers from Point.
 Node.prototype.add = Point.prototype.add;
 Node.prototype.sub = Point.prototype.sub;
 Node.prototype.toS = Point.prototype.toS;

@@ -62,6 +62,10 @@ var GameUI = {
                 this.timedObjects = [this.player1, this.player2];
                 this.timer = setInterval(this.timerService.bind(this),
                                          ANIMATION_TIMER_MS);
+                // Enforce z-order.
+                this.boardView.canvasElements.toBack();
+                this.player1.canvasElement.toFront();
+                this.player2.canvasElement.toFront();
               },
 
   onKey: function(e){
@@ -75,7 +79,8 @@ var GameUI = {
                this.updateKeysDown(e.type, keyName);
 
                // Prevent defaults for arrows.
-               if(["UP", "LEFT", "DOWN", "RIGHT"].indexOf(keyName) >= 0){
+               var nodefaultKeys = ["UP", "LEFT", "DOWN", "RIGHT", "SPACEBAR"];
+               if(nodefaultKeys.indexOf(keyName) >= 0){
                  e.preventDefault();
                }
                if(this.keyMappings[keyName] !== undefined){
@@ -135,6 +140,7 @@ var GameUI = {
         var program = Muncher.randomProgram();
         var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
                                       program, player.colorScheme[1]);
+        muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
         this.muncherViews.push(muncherView);
         //muncher.startGlowing();
       }

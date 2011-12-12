@@ -1,65 +1,113 @@
-var Simulator = function(){
-  //1. Munchers are dropped.
-  //2. Munchers resolve conflicts.
-  //3. Munchers munch.
-  //4. Munchers move.
-  //5. Back to 1.
-  // This function assumes that all muchers have been dropped.  It runs steps 2-4
-  this.stepTime = function(board){
-    this.resolveConflicts(board);
-    this.munch(board);
-    this.move(board);
-  }
+var Simulator = function(board){
+  this.munchers = [];
+  this.board = board;
+  this.time = 0;
 
-  this.resolveConflicts = function(board){
+  // Drop a muncher at the given node.
+  this.dropMuncher = function(player, node, program){
+    // Drop when not occupied.
+    var occupied = this.munchers.some(function(e){
+        return node === e.node;
+        }, this);
+    if(!occupied){
+      this.munchers.push(new Muncher(player, node, this.time, program));
+    }
+  }.bind(this)
+
+  // Internal method to resolve muncher conflicts.
+  var resolveConflicts = function(){
+    // Hash munchers based on current node.
     var conflictMap = {}
-    board.munchers.forEach(function(muncher){
-      code = muncher.toS();
-      if(conflictMap[code] === undefined){
-        conflictMap[code] = [];
-      }
-      conflictMap[code].push(muncher);
-    });
+    this.munchers.forEach(function(muncher){
+        code = muncher.node;
+        if(conflictMap[muncher.node] === undefined){
+          conflictMap[muncher.node] = [];
+        }
+        conflictMap[muncher.node].push(muncher);
+      }, this)
 
+    // Resolve conflicts using precedence rules.
+    var resolvePrecedence = ["R", "D", "L", "U"];
     for(p in conflictMap){
-      // Iterate non-inherited properties (the map) (this comment is for
-      // Brandon).
       if(conflictMap.hasOwnProperty(p)){
-        var muncherArr = conflictMap[p];
-        if(muncherArr.length > 1){
-          // TODO(reissb) -- 20111211 --
-          //  Muncher array is a list of munchers @ each node.
-          // We have more than one muncher at a node.  We must resolve through
-          // combat.
+        var nodeConflict = conflictMap[p];
+        if(nodeConflict.length > 1){
+          // Reverse sort by precedence.
+          nodeConflict.sort(function(a, b){
+              // Check newly dropped.
+              if(a.startTime === this.time){
+              }
+              resolvePrecedence.indexOf(a) < resolvePrecedence.indexOf(b);
+              });
+          // Keep highest precedence.
+          nodeConflict.shift();
+          // Remove all others.
+          nodeConflict.forEach(function(e){
+              this.munchers.splice(this.munchers.indexOf(e), 1);
+              });
         }
       }
     }
-  }
+  }.bind(this)
 
-  this.munch = function(board){
-    board.munchers.forEach(function(muncher){
-      var node = board.closestNode(muncher.loc);
-      node.consume(muncher.player, muncher.player.munchColor);
+  // Internal function to have all munchers eat at their node.
+  var munch = function(){
+    this.munchers.forEach(function(muncher){
+      muncher.node.munch(muncher.player);
     });
-  }
+  }.bind(this)
 
-  this.move = function(board){
-    board.munchers.forEach(function(muncher){
-      var node = board.closestNode(muncher.loc);
-
+  // Internal function to move munchers.
+  var move = function(){
+    // Move and filter black holes.
+    this.munchers = this.munchers.filter(function(muncher){
+        // Move the muncher to the next step in the program.
+        var blackHole = true;
+        for(i = 0; i < 4; ++i){
+          // Get instruction and rotate program.
+          var instruction = muncher.programState.shift();
+          muncher.programState.push(instruction);
+          var nextNode = muncher.node[instruction];
+          if((nextNode !== undefined) && !nextNode.munched()){
+            muncher.node = nextNode;
+            blackHole = false;
+            break;
+          }
+        }
+        return !blackHole;
     });
-  }
-}()
+  }.bind(this)
+
+  // Advance the simulation.
+  this.stepTime = function(){
+    // 1. Munchers are dropped.
+    // 2. Munchers resolve conflicts.
+    // 3. Munchers munch.
+    // 4. Munchers move.
+    // 5. Back to 1.
+    // This function assumes that all muchers have been
+    // dropped.  It runs steps 2-4.
+    resolveConflicts();
+    munch();
+    move();
+    ++this.time;
+  }.bind(this);
+}
 bindAllFunctions(Simulator);
 
 // Muncher logic object used during simulation.
-var Muncher = function(startNode, startTime, program){
+var Muncher = function(player, startNode, startTime, program){
   // The time that the muncher was dropped.
   this.startTime = startTime;
   // The nanomuncher location.
   this.node = startNode;
   // The nanomuncher program.
-  this.program = program;
+  this.program = (typeof(program) !== 'undefined') ? program
+                                                   : this.randomProgram();
+  // The executing program.
+  this.programState = this.program;
+  // The id of the owning player.
+  this.player = player;
 }
 // Generate a random program.
 Muncher.randomProgram = function(){

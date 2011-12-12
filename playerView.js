@@ -11,7 +11,7 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   // Additional speed when moving.
   var SHIP_ROTATION_SPEED_MOVE = 3;
   // Ship translation speed.
-  var SHIP_SPEED = 4;
+  var SHIP_SPEED = 10;
   // Time to animate.
   var ANIMATION_TIME = 25;
   // Current ship angle.

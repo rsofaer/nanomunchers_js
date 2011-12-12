@@ -1,17 +1,17 @@
+/// <summary> UI for player spinning mothership. </summary>
 var PlayerView= function(paper, size, startPos, colorscheme){
   // Available schemes.
   var COLOR_SCHEMES = {
     "SEA":    [ "lightblue",  "blue", {width: 13, color: "blue"} ],
     "FOREST": [ "lightgreen", "green", {width: 13, color: "green", opacity: 0.7} ],
   };
-
   this.colorScheme = COLOR_SCHEMES[colorscheme];
   // Angle to rotate per animation step.
   var SHIP_ROTATION_SPEED = 18;
   // Additional speed when moving.
   var SHIP_ROTATION_SPEED_MOVE = 3;
   // Ship translation speed.
-  var SHIP_SPEED = 4;
+  var SHIP_SPEED = 5;
   // Time to animate.
   var ANIMATION_TIME = 25;
   // Current ship angle.
@@ -21,7 +21,12 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   // Ship center coordinate.
   this.shipCoord = new Point(startPos.x, startPos.y);
   this.animationOffset = new Point(0, 0);
-  this.__defineGetter__("loc", function(){ return this.animationOffset.add(this.shipCoord)})
+
+  /// <summary> Location of the player ship center in UI space. </summary>
+  this.__defineGetter__("loc", function(){
+      return this.animationOffset.add(this.shipCoord)
+      })
+
   // Setup the ship graphics.
   this.canvasElement = function(){
     var set = paper.set();
@@ -45,14 +50,21 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   }.bind(this)()
   // Map of keys pressed.
   this.keysDown = {"UP": 0, "DOWN": 0, "LEFT": 0, "RIGHT": 0};
-  // Animate the ship by an offset.
+
+  /// <summary> Move the ship offset from its current location. </summary>
   this.animate = function(offset){
     var tformStr = "t" + offset.x + "," + offset.y +
                    "r" + this.shipAngle + "," +
                          this.shipCoord.x + "," + this.shipCoord.y;
     this.canvasElement.animate( { transform: tformStr }, ANIMATION_TIME)
   }.bind(this)
-  // Timer service routine.
+
+  /// <summary> Timer service routine. </summary>
+  /// <remarks>
+  ///   <para> The timer service responds to I/O commands and plays
+  ///     the idle ship animation.
+  ///   </para>
+  /// </remarks>
   this.timerService = function(){
     // Update the rotation.
     this.shipAngle += SHIP_ROTATION_SPEED;
@@ -89,6 +101,8 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   }.bind(this)
 
   this.targetGlowParams = this.colorScheme[2];
+
+  /// <summary> Set the ships currently targeted node. </summary>
   this.__defineSetter__("currentTarget", function(node){
     if(this._currentTarget_ !== node){
       if(this._currentTargetGlow_ !== undefined){
@@ -97,10 +111,15 @@ var PlayerView= function(paper, size, startPos, colorscheme){
       }
       this._currentTarget_ = node;
       if(node !== undefined){
-        this._currentTargetGlow_ = node.canvasElement.glow(this.targetGlowParams);
+        this._currentTargetGlow_ =
+          node.canvasElement.glow(this.targetGlowParams);
       }
     }
   });
-  this.__defineGetter__("currentTarget", function(){ return this._currentTarget_; });
+
+  /// <summary> Accessor for the current target. </summary>
+  this.__defineGetter__("currentTarget", function(){
+      return this._currentTarget_;
+      });
 }
 

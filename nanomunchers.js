@@ -70,7 +70,7 @@ var GameUI = {
 
                 // Make board and its view.
                 var XNODESIZE = 10;
-                var YNODESIZE = 8;
+                var YNODESIZE = 9;
                 this.board = new Board(XNODESIZE, YNODESIZE,
                                        Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);

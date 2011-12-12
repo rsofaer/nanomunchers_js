@@ -2,7 +2,7 @@
 var ANIMATION_TIMER_MS = 100;
 
 /// <summary> Time between game timesteps. </summary>
-var GAME_TIMER_MS = 1000;
+var GAME_TIMER_MS = 800;
 
 /// <summary> A 2d point. </summary>
 var Point = function(x_, y_){

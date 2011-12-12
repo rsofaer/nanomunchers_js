@@ -69,7 +69,10 @@ var GameUI = {
                                                  this.player2.colorScheme[1])
 
                 // Make board and its view.
-                this.board = new Board(10,8,Math.floor(10*8/1.8), 0.75)
+                var XNODESIZE = 10;
+                var YNODESIZE = 8;
+                this.board = new Board(XNODESIZE, YNODESIZE,
+                                       Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
                 // Create simulation.
                 this.simulator = new Simulator(this.board);
@@ -167,6 +170,9 @@ var GameUI = {
   },
 
   /// <summary> The animation timer routine. </summary>
+  /// <remarks>
+  ///   <para> Handles re-targeting and prompts the player motion. </para>
+  /// </remarks>
   timerService: function(){
     this.timedObjects.forEach(function(player){
       player.timerService();
@@ -201,9 +207,13 @@ var GameUI = {
 
   /// <summary> Deploy a muncher at the targeted node. </summary>
   fireMuncher: function(eventType, keyName, player){
+    // Check for keydown and KeysDown to avoid repeat firings.
     if("keydown" === eventType && !(KeysDown[keyName])){
+      // Make sure the player has a target and is not already firing.
       if(player.currentTarget !== undefined && player.clip.ready){
+        // Get a program from the clip, and set off the clip animation.
         var program = player.clip.popMuncher()
+        // The clip will return false if there is no muncher remaining.
         if(program){
           var muncher = this.simulator.dropMuncher(player,
               player.currentTarget.model, program);

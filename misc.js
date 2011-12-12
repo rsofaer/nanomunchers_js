@@ -86,7 +86,11 @@ function playSound(soundID){
   }
   SoundsPlaying[soundID] = true;
   var ele = $("#sounds #" + soundID)[0];
-  ele.Play();
+  try{
+    ele.Play();
+  }catch(err){
+    SoundsPlaying[soundID] = false;
+  }
   window.setTimeout(function(){
     SoundsPlaying[soundID] = false;
   },Number(ele.name)*1000);

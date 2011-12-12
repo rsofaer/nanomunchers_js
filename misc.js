@@ -75,3 +75,6 @@ Array.prototype.detect = function(f){
   }
 }
 
+function playSound(soundID){
+  $("#sounds #" + soundID)[0].Play();
+}

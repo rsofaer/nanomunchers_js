@@ -53,7 +53,7 @@ var BoardView = function(paper, board, nodeRadius, edgeLength){
 /// </remarks>
 BoardView.prototype.closestNode = function(point){
   // Find closest node.
-  var MAX_TARGET_DIST = 120;
+  var MAX_TARGET_DIST = 60;
   return Array.min(this.nodes, function(e){
     var dist = e.distance(point);
     // If the node is too far away, or has already been eaten,

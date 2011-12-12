@@ -56,7 +56,9 @@ BoardView.prototype.closestNode = function(point){
   var MAX_TARGET_DIST = 120;
   return Array.min(this.nodes, function(e){
     var dist = e.distance(point);
-    if(dist > MAX_TARGET_DIST){
+    // If the node is too far away, or has already been eaten,
+    // don't allow it to be targeted.
+    if(dist > MAX_TARGET_DIST || e.munched()){
       return Number.MAX_VALUE;
     }
     else{

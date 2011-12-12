@@ -75,15 +75,16 @@ Array.prototype.detect = function(f){
   }
 }
 
+// An object to keep track of what sounds are
+// currently being played.
 SoundsPlaying = {};
 
+/// <summary> Play a sound. </summary>
 function playSound(soundID){
-  log(SoundsPlaying[soundID]);
   if(SoundsPlaying[soundID]){
     soundID +="_"
   }
   SoundsPlaying[soundID] = true;
-  log(soundID)
   var ele = $("#sounds #" + soundID)[0];
   ele.Play();
   window.setTimeout(function(){

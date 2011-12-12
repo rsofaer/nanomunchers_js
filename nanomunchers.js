@@ -244,6 +244,12 @@ var GameUI = {
         }
       }
     }
+  },
+
+  /// <summary> Return whether the game is over </summary>
+  gameOver: function(){
+    return (this.simulator.allNodesMunched() ||
+             (this.player1.clip.empty() && this.player2.clip.empty()));
   }
 }
 bindAllFunctions(GameUI);

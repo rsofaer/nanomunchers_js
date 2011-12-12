@@ -119,3 +119,8 @@ ClipView.prototype.popMuncher = function(){
   }
 }
 
+/// <summary> Return whether the clip is empty. </summary>
+ClipView.prototype.empty = function(){
+  return this.muncherViews.length === 0;
+}
+

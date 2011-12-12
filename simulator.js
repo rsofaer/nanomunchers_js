@@ -3,6 +3,7 @@ var Simulator = function(board){
   this.munchers = [];
   this.board = board;
   this.time = 0;
+  this.nodesMunched = 0;
 
   /// <summary> Drop a muncher at the given node. </summary>
   this.dropMuncher = function(player, node, program){
@@ -58,7 +59,8 @@ var Simulator = function(board){
   var munch = function(){
     this.munchers.forEach(function(muncher){
       muncher.node.munch(muncher.player);
-    });
+      this.nodesMunched++;
+    }, this);
   }.bind(this)
 
   /// <summary> Internal function to move munchers. </summary>
@@ -99,6 +101,11 @@ var Simulator = function(board){
     move();
     ++this.time;
   }.bind(this);
+
+  /// <summary> Return whether all nodes have been munched. </summary>
+  this.allNodesMunched = function(){
+    return this.nodesMunched === this.board.numNodes;
+  }
 }
 bindAllFunctions(Simulator);
 

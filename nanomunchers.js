@@ -70,9 +70,6 @@ var GameUI = {
                 this.player1.canvasElement.toFront();
                 this.player2.canvasElement.toFront();
                 this.boardView.canvasElements.toBack();
-                // reissb -- 20111211 -- Fix for z-order issue.
-//                this.boardView.nodes[0].canvasElement.insertAfter(
-//                    this.boardView.canvasElements[this.board.numNodes - 1]);
               },
 
   onKey: function(e){
@@ -143,8 +140,11 @@ var GameUI = {
         var program = Muncher.randomProgram();
         var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
                                       program, player.colorScheme[1]);
+        // reissb -- 20111211 -- Fix for z-order issue.
         muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
         this.muncherViews.push(muncherView);
+        this.boardView.nodes[0].canvasElement.insertAfter(
+            this.boardView.canvasElements[1]);
         //muncher.startGlowing();
       }
     }

@@ -67,8 +67,8 @@ var ClipView = function(paper, topLeft, bottomRight, numMunchers, playerColor){
 }
 
 // Timings for animation events.
-ClipView.prototype.DOOR_OPEN_MS = 1000;
-ClipView.prototype.DOOR_CLOSE_MS = 200;
+ClipView.prototype.DOOR_OPEN_MS = 900;
+ClipView.prototype.DOOR_CLOSE_MS = 180;
 ClipView.prototype.POP_MUNCHER_MS = 500;
 
 
@@ -108,9 +108,9 @@ ClipView.prototype.popMuncher = function(){
                               this.closeDoor(function(){
                                   this.ready = this.currentMuncher <=
                                                this.totalMunchers;}.bind(this));
-                          }.bind(this), this.DOOR_OPEN_MS*0.2);
+                          }.bind(this), this.DOOR_OPEN_MS*0.15);
                       }.bind(this));
-    }.bind(this), this.DOOR_OPEN_MS*0.2);
+    }.bind(this), this.DOOR_OPEN_MS*0.15);
     // Return muncher program for the ejected muncher.
     var muncherView = this.muncherViews.pop();
     return muncherView.program;

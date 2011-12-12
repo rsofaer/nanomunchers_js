@@ -181,13 +181,26 @@ var GameUI = {
     }.bind(this));
   },
 
+  /// <summary> Draw the scores of the players on top of the board. </summary>
+  drawScores: function(){
+    // this function should probably have an implementation.
+  },
+
   /// <summary> Mark the muncher nodes before the munchers move. </summary>
+  ///  As we go, update the scores of the players.
+  ///  Afterwards, re-draw the scores of the players.
   markMunchedNodes: function(){
+    this.player1.score = 0;
+    this.player2.score = 0;
     this.boardView.nodes.forEach(function(nodeView){
+      if(nodeView.model.munchedBy){
+        nodeView.model.munchedBy.score++;
+      }
       if(nodeView.model.munchedBy !== nodeView.munchedBy){
         nodeView.munch(nodeView.model.munchedBy);
       }
     });
+    this.drawScores();
   },
 
   /// <summary> Update the UI after a simulation step. </summary>

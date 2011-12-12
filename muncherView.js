@@ -13,6 +13,8 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
   var program = this.program;
   // The initial position of the nanomuncher in paper coordinates.
   this.startPos = new Point(startPos.x, startPos.y);
+  this.animationOffset = new Point(0, 0);
+  this.__defineGetter__("loc", function(){ return this.animationOffset.add(this.startPos)})
   // Setup the nanomuncher graphics.
   this.canvasElement = function(){
     var set = paper.set();
@@ -78,7 +80,11 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
   // Glowing turned on or off.
   this.glowing = false;
   // Move the nanomuncher to a new location using the given instruction.
-  this.moveTo = function(pos, dir){
+  this.moveTo = function(newPoint){
+    this.animationOffset = newPoint.sub(this.startPos);
+    var tformStr = "t";
+    tformStr += this.animationOffset.x + "," + this.animationOffset.y;
+    this.canvasElement.animate({transform: tformStr}, GAME_TIMER_MS);
   }.bind(this)
   // The recursive glow routine.
   this.glowCallback = function(){

@@ -4,6 +4,9 @@ var Nanomunchers = {
 // Time between animation updates.
 var TIMER_UPDATE_MS = 50;
 
+// Time between game timesteps.
+var GAME_TIMER_MS = 1000;
+
 // A 2d point.
 var Point = function(x_, y_){
   this.x = x_;
@@ -11,6 +14,9 @@ var Point = function(x_, y_){
 }
 Point.prototype.add = function(point){
   return new Point(point.x + this.x, point.y + this.y);
+}
+Point.prototype.sub = function(point){
+  return new Point(this.x - point.x, this.y - point.y);
 }
 Point.prototype.toS = function(){
   return this.x + "," + this.y;

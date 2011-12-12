@@ -4,6 +4,8 @@ var PlayerView= function(paper, size, startPos, colorscheme){
     "SEA":    [ "lightblue",  "blue", {width: 13, color: "blue"} ],
     "FOREST": [ "lightgreen", "green", {width: 13, color: "green", opacity: 0.7} ],
   };
+
+  this.colorScheme = COLOR_SCHEMES[colorscheme];
   // Angle to rotate per animation step.
   var SHIP_ROTATION_SPEED = 18;
   // Additional speed when moving.
@@ -37,10 +39,10 @@ var PlayerView= function(paper, size, startPos, colorscheme){
         paper.circle(startPos.x, startPos.y, halfSize * 0.8),
         paper.path(trianglePath)
         );
-    set[0].attr("fill", COLOR_SCHEMES[colorscheme][0]);
-    set[1].attr("fill", COLOR_SCHEMES[colorscheme][1]);
+    set[0].attr("fill", this.colorScheme[0]);
+    set[1].attr("fill", this.colorScheme[1]);
     return set;
-  }()
+  }.bind(this)()
   // Map of keys pressed.
   this.keysDown = {"UP": 0, "DOWN": 0, "LEFT": 0, "RIGHT": 0};
   // Animate the ship by an offset.
@@ -75,15 +77,6 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   }.bind(this)
   // Process key press.
   this.onKey = function(flag, theKey){
-    if("keydown" === flag && theKey === "FIRE" && this.keysDown[theKey] === 0){
-      if(this.currentTarget !== undefined){
-        var program = Muncher.randomProgram();
-        var muncher = new MuncherView(GameUI.paper, 30, this.currentTarget,
-                                      program, COLOR_SCHEMES[colorscheme][1]);
-        //muncher.startGlowing();
-      }
-    }
-    
     if("keydown" === flag){
       if(this.keysDown[theKey] === 0)
       {
@@ -95,7 +88,7 @@ var PlayerView= function(paper, size, startPos, colorscheme){
     }
   }.bind(this)
 
-  this.targetGlowParams = COLOR_SCHEMES[colorscheme][2];
+  this.targetGlowParams = this.colorScheme[2];
   this.__defineSetter__("currentTarget", function(node){
     if(this._currentTarget_ !== node){
       if(this._currentTargetGlow_ !== undefined){

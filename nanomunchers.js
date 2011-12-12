@@ -57,27 +57,41 @@ var GameUI = {
                  keyCode -= KEYCODES.CAPS_OFFSET;
                }
                var keyName = KEYCODES[keyCode];
+               this.updateKeysDown(e.type, keyName);
+
                // Prevent defaults for arrows.
                if(["UP", "LEFT", "DOWN", "RIGHT"].indexOf(keyName) >= 0){
                  e.preventDefault();
                }
                if(this.keyMappings[keyName] !== undefined){
-                 this.keyMappings[keyName].apply(this, [e.type]);
+                 this.keyMappings[keyName].apply(this, [e.type, keyName]);
                }
              },
+  updateKeysDown: function(eventType, keyName){
+    if("keydown" === eventType){
+      if(KeysDown[keyName])
+      {
+        KeysDown[keyName] = 1;
+      }
+    }
+    else if("keyup" === eventType){
+      KeysDown[keyName] = 0;
+    }
+  },
 
+  keysDown: {},
   keyMappings: { // Player 1.
                  "W":         function(flag){this.player1.onKey(flag, "UP")},
                  "A":         function(flag){this.player1.onKey(flag, "LEFT")},
                  "S":         function(flag){this.player1.onKey(flag, "DOWN")},
                  "D":         function(flag){this.player1.onKey(flag, "RIGHT")},
-                 "SPACEBAR":  function(flag){this.player1.onKey(flag, "FIRE")},
+                 "SPACEBAR":  function(flag, keyName){this.fireMuncher(flag, keyName, this.player1)},
                  // Player 2.
                  "UP":        function(flag){this.player2.onKey(flag, "UP")},
                  "LEFT":      function(flag){this.player2.onKey(flag, "LEFT")},
                  "DOWN":      function(flag){this.player2.onKey(flag, "DOWN")},
                  "RIGHT":     function(flag){this.player2.onKey(flag, "RIGHT")},
-                 "RETURN":    function(flag){this.player2.onKey(flag, "FIRE")}},
+                 "RETURN":    function(flag, keyName){this.fireMuncher(flag, keyName, this.player2)}},
 
   addTimedObject: function(obj){
     if(this.timedObjects.indexOf(obj) < 0){
@@ -98,7 +112,20 @@ var GameUI = {
       var closestNode = this.boardView.closestNode(player.loc);
       player.currentTarget = closestNode;
     }.bind(this));
+  },
+
+  fireMuncher: function(eventType, keyName, player){
+    if("keydown" === eventType && !(KeysDown[keyName])){
+      if(player.currentTarget !== undefined){
+        var program = Muncher.randomProgram();
+        var muncher = new MuncherView(GameUI.paper, 30, player.currentTarget,
+                                      program, player.colorScheme[1]);
+        //muncher.startGlowing();
+      }
+    }
   }
 }
 bindAllFunctions(GameUI);
 
+// Map of keys pressed.
+var KeysDown = {};

@@ -1,12 +1,12 @@
 // A board is a set of nodes and edges.
 Board = function(xSize, ySize, numNodes, edgeProb){ 
-  this.xSize = typeof(xSize) != 'undefined' ? xSize : 30;
-  this.ySize = typeof(ySize) != 'undefined' ? ySize : 20;
+  this.xSize = typeof(xSize) !== 'undefined' ? xSize : 30;
+  this.ySize = typeof(ySize) !== 'undefined' ? ySize : 20;
 
-  var numNodes = typeof(numNodes) != 'undefined' ? numNodes : 700;
+  var numNodes = typeof(numNodes) !== 'undefined' ? numNodes : 700;
   // if there could be an edge between i and j, there
   // is an edgeprob chance that it will be there
-  var edgeProb = typeof(edgeProb) != 'undefined' ? edgeProb : 0.7;
+  var edgeProb = typeof(edgeProb) !== 'undefined' ? edgeProb : 0.7;
 
   // Create all possible nodes.
   this.nodes = []

@@ -1,5 +1,5 @@
 // A board is a set of nodes and edges.
-Board = function(xSize, ySize, numNodes, edgeProb){ 
+Board = function(xSize, ySize, numNodes, edgeProb){
   this.xSize = typeof(xSize) !== 'undefined' ? xSize : 30;
   this.ySize = typeof(ySize) !== 'undefined' ? ySize : 20;
 
@@ -72,6 +72,9 @@ var Node = function(x_, y_){
   // Consume this node.
   this.munch = function(munchedBy){
     this.munchedBy = munchedBy;
+    if(this.canvasElement){
+      this.canvasElement.attr('fill', munchedBy.colorScheme[1]);
+    }
   };
   // Is munched?
   this.munched = function(){ return this.munchedBy !== null; };

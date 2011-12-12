@@ -47,11 +47,11 @@ var GameUI = {
                 var NUM_MUNCHERS = 8;
                 this.player1clip = new ClipView(this.paper, new Point(0,0), new Point(CLIP_WIDTH, YSIZE),
                                                 NUM_MUNCHERS, this.player1.colorScheme[1])
-                                                
+
                 this.player2clip = new ClipView(this.paper, new Point(XSIZE - CLIP_WIDTH, 0),
                                                        new Point(XSIZE, YSIZE),
                                                 NUM_MUNCHERS, this.player2.colorScheme[1])
-                
+
                 // Make board and its view.
                 this.board = new Board(10,8,Math.floor(10*8/1.8), 0.75)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
@@ -125,13 +125,23 @@ var GameUI = {
       this.timedObjects.splice(idx, 1);
     }
   },
-  
+
   timerService: function(){
     this.timedObjects.forEach(function(player){
       player.timerService();
       var closestNode = this.boardView.closestNode(player.loc);
       player.currentTarget = closestNode;
     }.bind(this));
+  },
+
+  // The munchers are about to move.
+  // Mark their nodes as munched.
+  markMunchedNodes: function(){
+    this.boardView.nodes.forEach(function(nodeView){
+      if(nodeView.model.munchedBy !== nodeView.munchedBy){
+        nodeView.munch(nodeView.model.munchedBy);
+      }
+    });
   },
 
   // A simulation time step just completed,
@@ -153,7 +163,7 @@ var GameUI = {
   fireMuncher: function(eventType, keyName, player){
     if("keydown" === eventType && !(KeysDown[keyName])){
       if(player.currentTarget !== undefined){
-        var muncher = this.simulator.dropMuncher(player, 
+        var muncher = this.simulator.dropMuncher(player,
             player.currentTarget.model, Muncher.randomProgram());
         var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
                                            muncher.program, player.colorScheme[1]);

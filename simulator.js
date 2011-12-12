@@ -9,7 +9,7 @@ var Simulator = function(board){
     var occupied = this.munchers.some(function(e){
         return node === e.node;
         }, this);
-    if(!occupied){
+    if(!occupied && !node.munched()){
       var muncher = new Muncher(player, node, this.time, program);
       this.munchers.push(muncher);
       return muncher;
@@ -101,6 +101,7 @@ var Simulator = function(board){
 
   this.timerService = function(){
     this.stepTime();
+    GameUI.markMunchedNodes();
     GameUI.moveMunchers();
   }
 

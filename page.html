@@ -11,9 +11,36 @@
   <script src="muncherView.js"></script>
   <script src="simulator.js"></script>
   <script src="clip.js"></script>
+<style>
+  .menuDiv {background-image:url('game-over.jpg');height:600px}
+  .inputs {float:center;position:absolute;align:center;}
+</style>
 </head>
-<div id="game-screen"> </div>
 
+
+<div id='_menu' class='menuDiv'>
+<div id='_input' class='inputs'>
+<input type='text' id='_p1name'></input></br>
+<input type='text' id='_p2name'></input></br>
+<button id='btnStart'> start </button>
+</div>
+</div>
 <script> 
-  GameUI.initialize()
+  $('#btnStart').click(function() {
+  player1 = document.getElementById('_p1name').value;
+  player2 = document.getElementById('_p2name').value;
+  if(player1 != '' && player2!='')
+  {
+    $('#_menu').replaceWith("<div id='game-screen'> </div>");
+    // pass the player information to the GameUI class.
+    GameUI.initialize();
+  }
+  else
+  {
+    alert('Please enter player names to proceed!');
+  }
+  });
+    
 </script>
+
+

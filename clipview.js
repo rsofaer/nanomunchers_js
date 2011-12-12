@@ -102,6 +102,7 @@ ClipView.prototype.popMuncher = function(){
       var currentLocY = new Point(0, muncherView.loc.y);
       var ejectOffset = paperSizeY.add(currentLocY.add(this.interval.mul(
             this.numMunchers)));
+      playSound("fire");
       muncher.animate({transform: "T" +
                        muncherView.animationOffset.add(ejectOffset).toS()},
                       this.POP_MUNCHER_MS, "<",

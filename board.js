@@ -69,5 +69,7 @@ var Node = function(x_, y_){
            (this.y === nodeB.y && Math.abs(this.x - nodeB.x) === 1);
   };
 }
+Node.prototype.add = Point.prototype.add;
+Node.prototype.sub = Point.prototype.sub;
 bindAllFunctions(Node)
 

@@ -18,6 +18,9 @@ Point.prototype.add = function(point){
 Point.prototype.sub = function(point){
   return new Point(this.x - point.x, this.y - point.y);
 }
+Point.prototype.mul = function(scalar){
+  return new Point(this.x*scalar, this.y*scalar);
+}
 Point.prototype.toS = function(){
   return this.x + "," + this.y;
 }
@@ -36,10 +39,20 @@ var GameUI = {
                                               new Point(300, 300), "SEA")
                 this.player2 = new PlayerView(this.paper, 50,
                                               new Point(500, 300), "FOREST")
+
+                // Create clips.
+                var CLIP_WIDTH = 80;
+                var NUM_MUNCHERS = 8;
+                this.player1clip = new ClipView(this.paper, new Point(0,0), new Point(CLIP_WIDTH, YSIZE),
+                                                NUM_MUNCHERS, this.player1.colorScheme[1])
+                                                
+                this.player2clip = new ClipView(this.paper, new Point(XSIZE - CLIP_WIDTH, 0),
+                                                       new Point(XSIZE, YSIZE),
+                                                NUM_MUNCHERS, this.player2.colorScheme[1])
+                
                 // Make board and its view.
                 this.board = new Board(10,8,10*8/1.8, 0.75)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
-
                 this.muncherViews = []
 
                 // Set key handlers.

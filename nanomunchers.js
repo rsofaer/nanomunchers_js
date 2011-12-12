@@ -2,7 +2,7 @@ var Nanomunchers = {
 }
 
 // Time between animation updates.
-var TIMER_UPDATE_MS = 50;
+var ANIMATION_TIMER_MS = 50;
 
 // Time between game timesteps.
 var GAME_TIMER_MS = 1000;
@@ -40,13 +40,15 @@ var GameUI = {
                 this.board = new Board(10,8,10*8/1.8, 0.75)
                 this.boardView = new BoardView(this.paper, this.board, 15, 60);
 
+                this.muncherViews = []
+
                 // Set key handlers.
                 $(document).keydown(this.onKey.bind(this));
                 $(document).keyup(this.onKey.bind(this));
                 // Set timer sevice to handle input.
                 this.timedObjects = [this.player1, this.player2];
                 this.timer = setInterval(this.timerService.bind(this),
-                                         TIMER_UPDATE_MS);
+                                         ANIMATION_TIMER_MS);
               },
 
   onKey: function(e){
@@ -118,8 +120,9 @@ var GameUI = {
     if("keydown" === eventType && !(KeysDown[keyName])){
       if(player.currentTarget !== undefined){
         var program = Muncher.randomProgram();
-        var muncher = new MuncherView(GameUI.paper, 30, player.currentTarget,
+        var muncherView = new MuncherView(GameUI.paper, 30, player.currentTarget,
                                       program, player.colorScheme[1]);
+        this.muncherViews.push(muncherView);
         //muncher.startGlowing();
       }
     }

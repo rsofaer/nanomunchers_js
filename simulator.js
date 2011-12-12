@@ -13,7 +13,7 @@ var Simulator = function(board){
       var muncher = new Muncher(player, node, this.time, program);
       this.munchers.push(muncher);
       return muncher;
-    }
+    }else{ return {dead: true}; }
   }.bind(this)
 
   // Internal method to resolve muncher conflicts.

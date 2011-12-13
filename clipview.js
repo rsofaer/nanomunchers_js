@@ -63,7 +63,7 @@ var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
 }
 
 // Timings for animation events.
-ClipView.prototype.DOOR_OPEN_MS = 900;
+ClipView.prototype.DOOR_OPEN_MS = 800;
 ClipView.prototype.DOOR_CLOSE_MS = 180;
 ClipView.prototype.POP_MUNCHER_MS = 500;
 

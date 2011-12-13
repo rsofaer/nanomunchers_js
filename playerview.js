@@ -119,5 +119,11 @@ var PlayerView= function(paper, size, startPos, colorscheme){
 
   /// <summary> Accessor for the current target. </summary>
   this.getCurrentTarget = function(){ return this.currentTarget; }.bind(this)
+
+  this.destroyCanvasElements = function(){
+    this.clip.destroyCanvasElements();
+    this.canvasElement.remove();
+    this.canvasElement = null;
+  }
 }
 

@@ -123,3 +123,7 @@ ClipView.prototype.empty = function(){
   return this.muncherViews.length === 0;
 }
 
+/// <summary> Clean up the canvas elements. </summary>
+ClipView.prototype.destroyCanvasElements = function(){
+  this.canvasElements.remove();
+}

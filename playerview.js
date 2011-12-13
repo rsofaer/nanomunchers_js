@@ -124,6 +124,7 @@ var PlayerView= function(paper, size, startPos, colorscheme){
     this.clip.destroyCanvasElements();
     this.canvasElement.remove();
     this.canvasElement = null;
+    this.currentTargetGlow.remove();
   }
 }
 

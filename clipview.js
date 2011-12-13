@@ -126,4 +126,6 @@ ClipView.prototype.empty = function(){
 /// <summary> Clean up the canvas elements. </summary>
 ClipView.prototype.destroyCanvasElements = function(){
   this.canvasElements.remove();
+  this.doorPath.remove();
+  this.clipSidesPath.remove();
 }

@@ -48,6 +48,10 @@ var GameUI = {
     this.paper.canvas.style["border"] = "solid 1px";
     // Create players.
     var PLAYER_SIZE = 40;
+
+    // Start a set so the canvas elements can be cleared at game end.
+    this.paper.setStart();
+
     this.player1 = new PlayerView(this.paper, PLAYER_SIZE,
                                   new Point(300, 300), "SEA")
     this.player2 = new PlayerView(this.paper, PLAYER_SIZE,
@@ -120,7 +124,7 @@ var GameUI = {
         if(this.player1.score > this.player2.score){
           winner = this.scoreView1.name;
         }else if(this.player2.score > this.player1.score){
-          winner = this.scoreView1.name;
+          winner = this.scoreView2.name;
         }else{
           winner = [this.scoreView1.name, this.scoreView2.name]
         }
@@ -133,6 +137,9 @@ var GameUI = {
     this.gameLoopTimer = setInterval(
         this.gameLoopTimerService.bind(this),
         GAME_TIMER_MS);
+
+    this.canvasElements = this.paper.setFinish();
+    log(this.canvasElements);
   },
   stopGame: function(){
     window.clearInterval(this.gameLoopTimer);
@@ -289,12 +296,21 @@ var GameUI = {
   /// <summary> Return whether the game is over </summary>
   gameOver: function(){
     return (this.simulator.allNodesMunched() ||
-             (this.player1.clip.empty() && this.player2.clip.empty()));
+             (this.player1.clip.empty() && this.player2.clip.empty() &&
+              this.simulator.munchersRemaining() === 0));
+  },
+
+  /// <summary> Clean up the paper </summary>
+  destroyCanvasElements: function(){
+    [this.player1, this.player2, this.scoreView1,
+     this.scoreView2, this.boardView].forEach(function(e){
+      e.destroyCanvasElements();
+     });
   },
 
   /// <summary> Cleans up and restarts the game. </summary>
   restart: function(){
-
+    this.destroyCanvasElements();
   }
 }
 bindAllFunctions(GameUI);

@@ -29,7 +29,12 @@ var EndGameView = function(paper, winner, width, height){
       {"font-size": "18px", "font-family": "helvetica"} );
 
   // On clicking playAgain, remove this menu and restart the game.
-  this.playAgainButton.click(function(){this.canvasElements.remove(); GameUI.restart();}.bind(this));
+  var clickHandler = function(){
+    this.canvasElements.remove();
+    GameUI.restart();
+  }.bind(this);
+  this.playAgainButton.click(clickHandler);
+  this.playAgainText.click(clickHandler);
   this.canvasElements = paper.setFinish();
 }
 bindAllFunctions(EndGameView);

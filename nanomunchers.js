@@ -87,11 +87,11 @@ var GameUI = {
                                                  this.player2.colorScheme[1])
 
                 // Make board and its view.
-                var XNODESIZE = 15;
-                var YNODESIZE = 11;
+                var XNODESIZE = 14;
+                var YNODESIZE = 10;
                 this.board = new Board(XNODESIZE, YNODESIZE,
                                        Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
-                this.boardView = new BoardView(this.paper, this.board, 10, 45);
+                this.boardView = new BoardView(this.paper, this.board, 11, 50);
                 // Create simulation.
                 this.simulator = new Simulator(this.board);
                 // Holder for muncher UI items.
@@ -249,9 +249,10 @@ var GameUI = {
         if(program){
           var muncher = this.simulator.dropMuncher(player,
               player.currentTarget.model, program);
-          var muncherView = new MuncherView(GameUI.paper, 15,
+          var muncherView = new MuncherView(GameUI.paper, 17,
                                             player.currentTarget,
-                                            program, player.colorScheme[1]);
+                                            program, player.colorScheme[1],
+                                            false);
           muncherView.model = muncher;
           // reissb -- 20111211 -- Fix for z-order issue.
           muncherView.canvasElements.insertBefore(

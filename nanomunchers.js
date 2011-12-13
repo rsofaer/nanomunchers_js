@@ -39,128 +39,128 @@ var KeysDown = {};
 var GameUI = {
   /// <summary> Initialize the game. </summary>
   initialize: function(){
-                // Setup graphics.
-                var XSIZE = 800;
-                var YSIZE = 600;
-                this.paper = Raphael('game-screen',
-                                     XSIZE, YSIZE);
-                this.paper.canvas.style["background-color"] = "lightgray";
-                this.paper.canvas.style["border"] = "solid 1px";
-                // Create players.
-                var PLAYER_SIZE = 40;
-                this.player1 = new PlayerView(this.paper, PLAYER_SIZE,
-                                              new Point(300, 300), "SEA")
-                this.player2 = new PlayerView(this.paper, PLAYER_SIZE,
-                                              new Point(500, 300), "FOREST")
-                // Create score displays.
-                var SCORE_X_OFFSET = 5;
-                var SCORE_Y_OFFSET = 30;
-                var SCORE_TEXT_SIZE = 23;
-                // Player 1 score.
-                this.scoreView1 =
-                  new ScoreView(this.paper, new Point(SCORE_X_OFFSET,
-                                                      SCORE_Y_OFFSET),
-                                this.player1.colorScheme[1], SCORE_TEXT_SIZE,
-                                "left", "Player1", 0);
-                this.scoreView2 =
-                  new ScoreView(this.paper, new Point(XSIZE - SCORE_X_OFFSET,
-                                                      SCORE_Y_OFFSET),
-                                this.player2.colorScheme[1], SCORE_TEXT_SIZE,
-                                "right", "Player2", 0);
+    // Setup graphics.
+    var XSIZE = 800;
+    var YSIZE = 600;
+    this.paper = Raphael('game-screen',
+                         XSIZE, YSIZE);
+    this.paper.canvas.style["background-color"] = "lightgray";
+    this.paper.canvas.style["border"] = "solid 1px";
+    // Create players.
+    var PLAYER_SIZE = 40;
+    this.player1 = new PlayerView(this.paper, PLAYER_SIZE,
+                                  new Point(300, 300), "SEA")
+    this.player2 = new PlayerView(this.paper, PLAYER_SIZE,
+                                  new Point(500, 300), "FOREST")
+    // Create score displays.
+    var SCORE_X_OFFSET = 5;
+    var SCORE_Y_OFFSET = 30;
+    var SCORE_TEXT_SIZE = 23;
+    // Player 1 score.
+    this.scoreView1 =
+      new ScoreView(this.paper, new Point(SCORE_X_OFFSET,
+                                          SCORE_Y_OFFSET),
+                    this.player1.colorScheme[1], SCORE_TEXT_SIZE,
+                    "left", "Player1", 0);
+    this.scoreView2 =
+      new ScoreView(this.paper, new Point(XSIZE - SCORE_X_OFFSET,
+                                          SCORE_Y_OFFSET),
+                    this.player2.colorScheme[1], SCORE_TEXT_SIZE,
+                    "right", "Player2", 0);
 
-                // Create clips.
-                var NUM_MUNCHERS = 10;
-                var CLIP_Y_OFFSET = Math.floor(0.125 * YSIZE);
-                var CLIP_WIDTH = Math.floor(0.0625 * XSIZE);
-                var CLIP_HEIGHT = Math.floor(0.75 * YSIZE);
-                var clipDims = new Point(CLIP_WIDTH, CLIP_HEIGHT);
-                this.player1.clip = new ClipView(this.paper,
-                                                 new Point(0, CLIP_Y_OFFSET),
-                                                 clipDims,
-                                                 NUM_MUNCHERS,
-                                                 this.player1.colorScheme[1]);
-                var p2ClipX = XSIZE - CLIP_WIDTH;
-                this.player2.clip = new ClipView(this.paper,
-                                                 new Point(p2ClipX,
-                                                           CLIP_Y_OFFSET),
-                                                 clipDims,
-                                                 NUM_MUNCHERS,
-                                                 this.player2.colorScheme[1])
+    // Create clips.
+    var NUM_MUNCHERS = 10;
+    var CLIP_Y_OFFSET = Math.floor(0.125 * YSIZE);
+    var CLIP_WIDTH = Math.floor(0.0625 * XSIZE);
+    var CLIP_HEIGHT = Math.floor(0.75 * YSIZE);
+    var clipDims = new Point(CLIP_WIDTH, CLIP_HEIGHT);
+    this.player1.clip = new ClipView(this.paper,
+                                     new Point(0, CLIP_Y_OFFSET),
+                                     clipDims,
+                                     NUM_MUNCHERS,
+                                     this.player1.colorScheme[1]);
+    var p2ClipX = XSIZE - CLIP_WIDTH;
+    this.player2.clip = new ClipView(this.paper,
+                                     new Point(p2ClipX,
+                                               CLIP_Y_OFFSET),
+                                     clipDims,
+                                     NUM_MUNCHERS,
+                                     this.player2.colorScheme[1])
 
-                // Make board and its view.
-                var XNODESIZE = 14;
-                var YNODESIZE = 10;
-                this.board = new Board(XNODESIZE, YNODESIZE,
-                                       Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
-                this.boardView = new BoardView(this.paper, this.board, 11, 50);
-                // Create simulation.
-                this.simulator = new Simulator(this.board);
-                // Holder for muncher UI items.
-                this.muncherViews = []
-                // Set key handlers.
-                $(document).keydown(this.onKey.bind(this));
-                $(document).keyup(this.onKey.bind(this));
-                // Set timer sevice to handle input.
-                this.timedObjects = [this.player1, this.player2];
-                this.timer = setInterval(this.timerService.bind(this),
-                                         ANIMATION_TIMER_MS);
-                // Enforce z-order.
-                this.player1.canvasElement.toFront();
-                this.player2.canvasElement.toFront();
-                this.boardView.canvasElements.toBack();
+    // Make board and its view.
+    var XNODESIZE = 14;
+    var YNODESIZE = 10;
+    this.board = new Board(XNODESIZE, YNODESIZE,
+                           Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
+    this.boardView = new BoardView(this.paper, this.board, 11, 50);
+    // Create simulation.
+    this.simulator = new Simulator(this.board);
+    // Holder for muncher UI items.
+    this.muncherViews = []
+    // Set key handlers.
+    $(document).keydown(this.onKey.bind(this));
+    $(document).keyup(this.onKey.bind(this));
+    // Set timer sevice to handle input.
+    this.timedObjects = [this.player1, this.player2];
+    this.timer = setInterval(this.timerService.bind(this),
+                             ANIMATION_TIMER_MS);
+    // Enforce z-order.
+    this.player1.canvasElement.toFront();
+    this.player2.canvasElement.toFront();
+    this.boardView.canvasElements.toBack();
 
-                /// <summary> The game loop timer service. </summary>
-                this.gameLoopTimerService = function(){
-                  this.simulator.stepTime();
-                  this.markMunchedNodes();
-                  this.drawScores();
-                  this.moveMunchers();
-                  if(this.gameOver()){
-                    var winner;
-                    if(this.player1.score > this.player2.score){
-                      winner = this.scoreView1.name;
-                    }else if(this.player2.score > this.player1.score){
-                      winner = this.scoreView1.name;
-                    }else{
-                      winner = [this.scoreView1.name, this.scoreView2.name]
-                    }
-                    var e = new EndGameView(this.paper, winner, this.paper.width/1.8, this.paper.height/3);
-                    this.stopGame();
-                  }
-                }.bind(this)
+    /// <summary> The game loop timer service. </summary>
+    this.gameLoopTimerService = function(){
+      this.simulator.stepTime();
+      this.markMunchedNodes();
+      this.drawScores();
+      this.moveMunchers();
+      if(this.gameOver()){
+        var winner;
+        if(this.player1.score > this.player2.score){
+          winner = this.scoreView1.name;
+        }else if(this.player2.score > this.player1.score){
+          winner = this.scoreView1.name;
+        }else{
+          winner = [this.scoreView1.name, this.scoreView2.name]
+        }
+        var e = new EndGameView(this.paper, winner, this.paper.width/1.8, this.paper.height/3);
+        this.stopGame();
+      }
+    }.bind(this)
 
-                // Start the game loop.
-                this.gameLoopTimer = clearInterval(
-                    this.gameLoopTimerService.bind(this),
-                    GAME_TIMER_MS);
-              },
+    // Start the game loop.
+    this.gameLoopTimer = setInterval(
+        this.gameLoopTimerService.bind(this),
+        GAME_TIMER_MS);
+  },
   stopGame: function(){
-    window.removeInterval(this.gameLoopTimer);
+    window.clearInterval(this.gameLoopTimer);
   },
   stopAnimation: function(){
-    window.removeInterval(this.timer);
+    window.clearInterval(this.timer);
   },
 
   /// <summary> Input handler routine. </summary>
   onKey: function(e){
-               // Handle keys using key mappings.
-               var keyCode = e.keyCode;
-               if(keyCode >= KEYCODES.A + KEYCODES.CAPS_OFFSET &&
-                   keyCode <= KEYCODES.Z + KEYCODES.CAPS_OFFSET){
-                 keyCode -= KEYCODES.CAPS_OFFSET;
-               }
-               var keyName = KEYCODES[keyCode];
+     // Handle keys using key mappings.
+     var keyCode = e.keyCode;
+     if(keyCode >= KEYCODES.A + KEYCODES.CAPS_OFFSET &&
+         keyCode <= KEYCODES.Z + KEYCODES.CAPS_OFFSET){
+       keyCode -= KEYCODES.CAPS_OFFSET;
+     }
+     var keyName = KEYCODES[keyCode];
 
-               // Prevent defaults for arrows and spacebar.
-               var nodefaultKeys = ["UP", "LEFT", "DOWN", "RIGHT", "SPACEBAR"];
-               if(nodefaultKeys.indexOf(keyName) >= 0){
-                 e.preventDefault();
-               }
-               if(this.keyMappings[keyName] !== undefined){
-                 this.keyMappings[keyName].apply(this, [e.type, keyName]);
-               }
-               this.updateKeysDown(e.type, keyName);
-             },
+     // Prevent defaults for arrows and spacebar.
+     var nodefaultKeys = ["UP", "LEFT", "DOWN", "RIGHT", "SPACEBAR"];
+     if(nodefaultKeys.indexOf(keyName) >= 0){
+       e.preventDefault();
+     }
+     if(this.keyMappings[keyName] !== undefined){
+       this.keyMappings[keyName].apply(this, [e.type, keyName]);
+     }
+     this.updateKeysDown(e.type, keyName);
+   },
 
   /// <summary> Update key down map. <summary>
   updateKeysDown: function(eventType, keyName){
@@ -294,7 +294,7 @@ var GameUI = {
 
   /// <summary> Cleans up and restarts the game. </summary>
   restart: function(){
-    // This function should definitely have an implementation.
+
   }
 }
 bindAllFunctions(GameUI);

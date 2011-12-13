@@ -2,8 +2,10 @@
 var PlayerView= function(paper, size, startPos, colorscheme){
   // Available schemes.
   var COLOR_SCHEMES = {
-    "SEA":    [ "lightblue",  "blue", {width: 13, color: "blue"} ],
-    "FOREST": [ "lightgreen", "green", {width: 13, color: "green", opacity: 0.7} ],
+    "SEA":    [ "lightblue",  "blue",
+                {width: 13, color: "blue"} ],
+    "FOREST": [ "lightgreen", "green",
+                {width: 13, color: "green", opacity: 0.7} ]
   };
   this.colorScheme = COLOR_SCHEMES[colorscheme];
   // Angle to rotate per animation step.
@@ -21,9 +23,9 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   this.animationOffset = new Point(0, 0);
 
   /// <summary> Location of the player ship center in UI space. </summary>
-  this.__defineGetter__("loc", function(){
-      return this.animationOffset.add(this.shipCoord)
-      })
+  this.getLoc = function(){
+    return this.animationOffset.add(this.shipCoord);
+  }.bind(this)
 
   // Setup the ship graphics.
   this.canvasElement = function(){
@@ -45,7 +47,7 @@ var PlayerView= function(paper, size, startPos, colorscheme){
     set[0].attr("fill", this.colorScheme[0]);
     set[1].attr("fill", this.colorScheme[1]);
     return set;
-  }.bind(this)()
+  }.apply(this)
   // Map of keys pressed.
   this.keysDown = {"UP": 0, "DOWN": 0, "LEFT": 0, "RIGHT": 0};
 
@@ -101,23 +103,30 @@ var PlayerView= function(paper, size, startPos, colorscheme){
   this.targetGlowParams = this.colorScheme[2];
 
   /// <summary> Set the ships currently targeted node. </summary>
-  this.__defineSetter__("currentTarget", function(node){
-    if(this._currentTarget_ !== node){
-      if(this._currentTargetGlow_ !== undefined){
-        this._currentTargetGlow_.remove()
-        this._currentTargetGlow_ = undefined;
+  this.setCurrentTarget = function(node){
+    if(this.currentTarget !== node){
+      if(this.currentTargetGlow !== undefined){
+        this.currentTargetGlow.remove();
+        this.currentTargetGlow = undefined;
       }
-      this._currentTarget_ = node;
+      this.currentTarget = node;
       if(node !== undefined){
-        this._currentTargetGlow_ =
+        this.currentTargetGlow =
           node.canvasElement.glow(this.targetGlowParams);
       }
     }
-  });
+  };
 
   /// <summary> Accessor for the current target. </summary>
-  this.__defineGetter__("currentTarget", function(){
-      return this._currentTarget_;
-      });
+  this.getCurrentTarget = function(){ return this.currentTarget; }.bind(this)
+
+  this.destroyCanvasElements = function(){
+    this.clip.destroyCanvasElements();
+    this.canvasElement.remove();
+    this.canvasElement = null;
+    if(this.currentTargetGlow){
+      this.currentTargetGlow.remove();
+    }
+  }
 }
 

@@ -105,6 +105,12 @@ var Simulator = function(board){
   /// <summary> Return whether all nodes have been munched. </summary>
   this.allNodesMunched = function(){
     return this.nodesMunched === this.board.numNodes;
+  },
+
+  /// <summary> Return the number of munchers remaining
+  //  on the board. </summary>
+  this.munchersRemaining = function(){
+    return this.munchers.length;
   }
 }
 bindAllFunctions(Simulator);

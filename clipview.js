@@ -98,7 +98,7 @@ ClipView.prototype.popMuncher = function(){
       muncherView.hideText();
       // Eject the last muncher.
       var paperSizeY = new Point(0, this.paper.height);
-      var currentLocY = new Point(0, muncherView.loc.y);
+      var currentLocY = new Point(0, muncherView.getLoc().y);
       var ejectOffset = paperSizeY.add(currentLocY.add(this.interval.mul(
             this.numMunchers)));
       playSound("fire");
@@ -123,3 +123,9 @@ ClipView.prototype.empty = function(){
   return this.muncherViews.length === 0;
 }
 
+/// <summary> Clean up the canvas elements. </summary>
+ClipView.prototype.destroyCanvasElements = function(){
+  this.canvasElements.remove();
+  this.doorPath.remove();
+  this.clipSidesPath.remove();
+}

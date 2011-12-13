@@ -1,7 +1,7 @@
 <html>
   <head>
     
-     <style>
+    <style>
       #overlay {
       z-index:9;
       position:absolute;
@@ -19,70 +19,76 @@
       .left-spacer{height:40%;width:18%;float:left;}
       .table-container {float:left;position:relative;background:black;padding:4px}
     </style>    
-   
-    <script src="games/nanomunchers/lib/jquery.js"></script>
-    <script src="games/nanomunchers/lib/raphael.js"></script>
-    <script src="games/nanomunchers/lib/keycodes.js"></script>
-    <script src="games/nanomunchers/misc.js"></script>
-    <script src="games/nanomunchers/nanomunchers.js"></script>
-    <script src="games/nanomunchers/boardview.js"></script>
-    <script src="games/nanomunchers/playerview.js"></script>
-    <script src="games/nanomunchers/muncherview.js"></script>
-    <script src="games/nanomunchers/simulator.js"></script>
-    <script src="games/nanomunchers/clipview.js"></script>
-    <script src="games/nanomunchers/scoreview.js"></script>
+    
+    <script src="lib/jquery.js"></script>
+    <script src="lib/raphael.js"></script>
+    <script src="lib/keycodes.js"></script>
+    <script src="misc.js"></script>
+    <script src="nanomunchers.js"></script>
+    <script src="boardview.js"></script>
+    <script src="playerview.js"></script>
+    <script src="muncherview.js"></script>
+    <script src="simulator.js"></script>
+    <script src="clipview.js"></script>
+    <script src="scoreview.js"></script>
+    <script src="endgameview.js"></script>
     <script> 
-      
-      $('document').ready(function(){
-        GameUI.initialize();
-        document.getElementById('overlay').style.visibility = 'visible';
+      $(document).ready(function(){
+      GameUI.initialize()
       });
-
-        function runGame() {
+      
+      function runGame() {
         document.getElementById('overlay').style.visibility = 'hidden';
         player1 = document.getElementById('_p1name').value;
-        player2 = document.getElementById('_p2name').value;
-        if(player1 == '') 
-        {
+         player2 = document.getElementById('_p2name').value;
+        if(player1 == ''){
           player1 = 'Player 1';
         }
-        if(player2 == '')
-        {
+        if(player2 == '') {
           player2 = 'Player 2';
         }
       }  
     </script>
-    
   </head>
+
   <body>
     <div id="overlay">
       <div class="top-spacer"></div>
       <div id='_input'>
-        <div class="left-spacer"></div>
-        <div class="table-container">
+	<div class="left-spacer"></div>
+	<div class="table-container">
 	  <table cellpadding='0px' cellspacing='0' border='0px'>
 	    <tr class='rowInput'>
-	  	<td><label for='_p1name' class='inputText'>Blue player's name: </label></td>
-	  	<td><input type='text' id='_p1name'></input></td>	
+	      <td>
+		<label for='_p1name' class='inputText'>Blue player's name: </label>
+	      </td>
+	      <td>
+		<input type='text' id='_p1name'></input>
+	      </td>	
 	    </tr>
 	    <tr class='rowInput'>
-	  	<td><label for='_p2name' class='inputText'>Green player's name:</label></td>
-	  	<td><input type='text' id='_p2name'></input></td>
+	      <td>
+		<label for='_p2name' class='inputText'>Green player's name:</label>
+	      </td>
+	      <td>
+		<input type='text' id='_p2name'></input>
+	      </td>
 	    </tr>
 	    <tr class='rowInput'>
-	  	<td colspan=1></td>
-	     	<td><button id='btnStart' onclick='runGame()' style='background-color:lightred'>Start Game!</button></td>
+	      <td colspan=1></td>
+	      <td>
+		<button id='btnStart' onclick='runGame()' style='background-color:lightred'>Start Game!</button>
+	      </td>
 	    </tr>
 	  </table>
 	</div>
       </div>
     </div>
-  
     <div id="sounds">
-      <audio src="games/nanomunchers/sounds/fire.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire" > </audio>
-      <audio src="games/nanomunchers/sounds/fire.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire_"> </audio>
+      <audio src="sounds/fire.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire" > </audio>
+      <audio src="sounds/fire.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire_"> </audio>
     </div>
     <div id='game-screen'></div>
-</body>
-    
+  </body>
+  
 </html>

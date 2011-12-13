@@ -16,9 +16,9 @@ var MuncherView = function(paper, size, startPos, program,
   this.showText = showText;
 
   /// <summary> Get the muncher location on the screen. </summary>
-  this.__defineGetter__("loc", function(){
-      return this.animationOffset.add(this.startPos)
-      })
+  this.getLoc = function(){
+    return this.animationOffset.add(this.startPos);
+  }.bind(this);
 
   // Setup the nanomuncher graphics.
   this.canvasElements = function(){
@@ -89,7 +89,7 @@ var MuncherView = function(paper, size, startPos, program,
           );
     }
     return set;
-  }.bind(this)()
+  }.apply(this)
 
   /// <summary> Move the nanomuncher to a new location using the
   ///   given instruction.

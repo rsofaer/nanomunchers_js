@@ -44,6 +44,11 @@ var BoardView = function(paper, board, nodeRadius, edgeLength){
   this.nodes[0].canvasElement.insertAfter(lastCanvasEle);
 }
 
+/// <summary> Remove all canvas elements from the canvas. </summary>
+BoardView.prototype.destroyCanvasElements = function(){
+  this.canvasElements.remove();
+}
+
 /// <summary> Find the closest node based on the targeting rules. </summary>
 /// <remarks>
 ///   <para> The target distance controls the farthest that a ship can

@@ -34,5 +34,11 @@ var ScoreView = function(paper, anchorPoint, textColor, textSize,
     this.textElement.attr("text", this.name + "\n" + this.score);
   }
 }
+
+/// <summary> Remove all canvas elements from the canvas. </summary>
+ScoreView.prototype.destroyCanvasElements = function(){
+  this.textElement.remove();
+}
+
 bindAllFunctions(ScoreView);
 

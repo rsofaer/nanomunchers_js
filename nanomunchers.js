@@ -50,8 +50,6 @@ var GameUI = {
     var PLAYER_SIZE = 40;
 
     // Start a set so the canvas elements can be cleared at game end.
-    this.paper.setStart();
-
     this.player1 = new PlayerView(this.paper, PLAYER_SIZE,
                                   new Point(300, 300), "SEA")
     this.player2 = new PlayerView(this.paper, PLAYER_SIZE,
@@ -138,8 +136,6 @@ var GameUI = {
         this.gameLoopTimerService.bind(this),
         GAME_TIMER_MS);
 
-    this.canvasElements = this.paper.setFinish();
-    log(this.canvasElements);
   },
   stopGame: function(){
     window.clearInterval(this.gameLoopTimer);
@@ -310,7 +306,21 @@ var GameUI = {
 
   /// <summary> Cleans up and restarts the game. </summary>
   restart: function(){
+    this.stopAnimation();
+    this.stopGame();
     this.destroyCanvasElements();
+
+    this.player1 = null;
+    this.player2 = null;
+    this.scoreView1 = null;
+    this.scoreView2 = null;
+    this.boardView = null;
+    this.simulator = null;
+    this.board = null;
+    this.timedObjects = null;
+
+    this.paper.remove();
+    this.initialize();
   }
 }
 bindAllFunctions(GameUI);

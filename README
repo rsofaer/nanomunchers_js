@@ -42,7 +42,7 @@ rules are enforced.
 ARCHITECTURE
 boardview.js - Board GUI elements.
 clipview.js - Nanomuncher clip GUI elements.
-lib - Contains third party libraries Raphael, JQuery, Jasmine.
+lib - Contains third party libraries Raphael, JQuery.
 misc.js - Helper functions.
 muncherview.js - Nanomuncher GUI elements.
 nanomunchers.js - Game UI elements and global constants.
@@ -52,8 +52,6 @@ scoreview.js - Score GUI elements.
 server - Runs a test HTTP server.
 simulator.js - Nanomunchers simulation logic elements.
 sounds - Sounds used during gameplay.
-tests.html - Main test document.
-tests.js - Main test code.
 
 The game adopts a model/view strategy. All of the core logic elements necessary
 to run the game and enforce its rules are implemented in Simulator. Each game

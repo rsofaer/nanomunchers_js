@@ -42,7 +42,8 @@ var GameUI = {
                 // Setup graphics.
                 var XSIZE = 800;
                 var YSIZE = 600;
-                this.paper = Raphael("game-screen", XSIZE, YSIZE)
+                this.paper = Raphael('game-screen',
+                                     XSIZE, YSIZE);
                 this.paper.canvas.style["background-color"] = "lightgray";
                 this.paper.canvas.style["border"] = "solid 1px";
                 // Create players.
@@ -195,9 +196,9 @@ var GameUI = {
   timerService: function(){
     this.timedObjects.forEach(function(player){
       player.timerService();
-      var closestNode = this.boardView.closestNode(player.loc);
-      player.currentTarget = closestNode;
-    }.bind(this));
+      var closestNode = this.boardView.closestNode(player.getLoc());
+      player.setCurrentTarget(closestNode);
+    },this);
   },
 
   /// <summary> Draw the scores of the players on top of the board. </summary>
@@ -242,15 +243,15 @@ var GameUI = {
     // Check for keydown and KeysDown to avoid repeat firings.
     if("keydown" === eventType && !(KeysDown[keyName])){
       // Make sure the player has a target and is not already firing.
-      if(player.currentTarget !== undefined && player.clip.ready){
+      if(player.getCurrentTarget() !== undefined && player.clip.ready){
         // Get a program from the clip, and set off the clip animation.
         var program = player.clip.popMuncher()
         // The clip will return false if there is no muncher remaining.
         if(program){
           var muncher = this.simulator.dropMuncher(player,
-              player.currentTarget.model, program);
+              player.getCurrentTarget().model, program);
           var muncherView = new MuncherView(GameUI.paper, 17,
-                                            player.currentTarget,
+                                            player.getCurrentTarget(),
                                             program, player.colorScheme[1],
                                             false);
           muncherView.model = muncher;

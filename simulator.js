@@ -1,31 +1,32 @@
+/// <summary> Controls the nanomuncher core simulation. </summary>
 var Simulator = function(board){
   this.munchers = [];
   this.board = board;
   this.time = 0;
 
-  // Drop a muncher at the given node.
+  /// <summary> Drop a muncher at the given node. </summary>
   this.dropMuncher = function(player, node, program){
     // Drop when not occupied.
     var occupied = this.munchers.some(function(e){
         return node === e.node;
         }, this);
-    if(!occupied){
+    if(!occupied && !node.munched()){
       var muncher = new Muncher(player, node, this.time, program);
       this.munchers.push(muncher);
       return muncher;
-    }
+    }else{ return {dead: true}; }
   }.bind(this)
 
-  // Internal method to resolve muncher conflicts.
+  /// <summary> Internal method to resolve muncher conflicts. </summary>
   var resolveConflicts = function(){
     // Hash munchers based on current node.
     var conflictMap = {}
     this.munchers.forEach(function(muncher){
-        code = muncher.node;
-        if(conflictMap[muncher.node] === undefined){
-          conflictMap[muncher.node] = [];
+        code = muncher.node.toS();
+        if(conflictMap[code] === undefined){
+          conflictMap[code] = [];
         }
-        conflictMap[muncher.node].push(muncher);
+        conflictMap[code].push(muncher);
       }, this)
 
     // Resolve conflicts using precedence rules.
@@ -47,20 +48,20 @@ var Simulator = function(board){
           nodeConflict.forEach(function(e){
             e.dead = true;
             this.munchers.splice(this.munchers.indexOf(e), 1);
-          });
+          }, this);
         }
       }
     }
   }.bind(this)
 
-  // Internal function to have all munchers eat at their node.
+  /// <summary> Internal method to have munchers eat at their node. </sumamry>
   var munch = function(){
     this.munchers.forEach(function(muncher){
       muncher.node.munch(muncher.player);
     });
   }.bind(this)
 
-  // Internal function to move munchers.
+  /// <summary> Internal function to move munchers. </summary>
   var move = function(){
     // Move and filter black holes.
     this.munchers = this.munchers.filter(function(muncher){
@@ -84,7 +85,7 @@ var Simulator = function(board){
     });
   }.bind(this)
 
-  // Advance the simulation.
+  /// <summary> Advance the simulation by one time step. </summary>
   this.stepTime = function(){
     // 1. Munchers are dropped.
     // 2. Munchers resolve conflicts.
@@ -98,18 +99,10 @@ var Simulator = function(board){
     move();
     ++this.time;
   }.bind(this);
-
-  this.timerService = function(){
-    this.stepTime();
-    GameUI.moveMunchers();
-  }
-
-  this.timer = setInterval(this.timerService.bind(this),
-      GAME_TIMER_MS);
 }
 bindAllFunctions(Simulator);
 
-// Muncher logic object used during simulation.
+/// <summary>  Muncher logic object used during simulation. </summary>
 var Muncher = function(player, startNode, startTime, program){
   // The time that the muncher was dropped.
   this.startTime = startTime;

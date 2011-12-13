@@ -11,13 +11,13 @@
   <script src="muncherView.js"></script>
   <script src="simulator.js"></script>
   <script src="clip.js"></script>
+  <script src="clipview.js"></script>
 <style>
-  .menuDiv {background-image:url('game-over.jpg');height:600px}
+  .menuDiv {background-image:url('game-over.jpg');height:600px;display:none;}
   .inputs {float:center;position:absolute;align:center;}
   
 </style>
 </head>
-
 
 <div id='_menu' class='menuDiv'>
   <div id='_input' class='inputs'>
@@ -29,8 +29,16 @@
       <button id='btnStart'> start </button>
     </div>
   </div>
+  
+<div id="sounds">
+  <embed src="sounds/fire.wav" autostart=false width=1 height=1 name="1" id="fire" enablejavascript="true">
+  <embed src="sounds/fire.wav" autostart=false width=1 height=1 name="1" id="fire_" enablejavascript="true">
 </div>
+
 <script> 
+  $('document').ready(function(){
+    $('#_menuDiv').show();
+  });
   $('#btnStart').click(function() {
   player1 = document.getElementById('_p1name').value;
   player2 = document.getElementById('_p2name').value;
@@ -38,14 +46,19 @@
   {
     $('#_menu').replaceWith("<div id='game-screen'> </div>");
     // pass the player information to the GameUI class.
-    GameUI.initialize();
+    
   }
   else
   {
-    alert('Please enter player names to proceed!');
+     if(player1 == '') 
+     {
+       player1 = 'Player 1';
+     }
+     if(player2 == '')
+     {
+       player2 = 'Player 2';
+     }
   }
-  });
-    
+  GameUI.initialize();
+  });  
 </script>
-
-

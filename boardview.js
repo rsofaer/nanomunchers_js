@@ -1,4 +1,4 @@
-// UI for a board.
+/// <summary> UI for a board. </summary>
 var BoardView = function(paper, board, nodeRadius, edgeLength){
   // Colors used for rendering.
   var COLOR_SCHEME = { "CIRCLE_COLOR" : 'red', "LINE_COLOR" : 'black' };
@@ -44,14 +44,21 @@ var BoardView = function(paper, board, nodeRadius, edgeLength){
   this.nodes[0].canvasElement.insertAfter(lastCanvasEle);
 }
 
-// The target distance controls the farthest that a ship can be while
-// targeting a node.
+/// <summary> Find the closest node based on the targeting rules. </summary>
+/// <remarks>
+///   <para> The target distance controls the farthest that a ship can
+///     be while targeting a node. When there are no nodes meeting the
+///     target criteria, then this function returns undefined.
+///   </para>
+/// </remarks>
 BoardView.prototype.closestNode = function(point){
   // Find closest node.
   var MAX_TARGET_DIST = 120;
   return Array.min(this.nodes, function(e){
     var dist = e.distance(point);
-    if(dist > MAX_TARGET_DIST){
+    // If the node is too far away, or has already been eaten,
+    // don't allow it to be targeted.
+    if(dist > MAX_TARGET_DIST || e.munched()){
       return Number.MAX_VALUE;
     }
     else{
@@ -60,9 +67,10 @@ BoardView.prototype.closestNode = function(point){
   });
 }
 
+/// <summary> Locate the view matched to the given board node. </summary>
 BoardView.prototype.findViewForNode = function(node){
   this.nodes.detect(function(nodeView){
     return nodeView.model === node;
-    return false;
   });
 }
+

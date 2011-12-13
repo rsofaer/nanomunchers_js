@@ -114,15 +114,33 @@ var GameUI = {
                   this.markMunchedNodes();
                   this.drawScores();
                   this.moveMunchers();
+                  if(this.gameOver()){
+                    var winner;
+                    if(this.player1.score > this.player2.score){
+                      winner = this.scoreView1.name;
+                    }else if(this.player2.score > this.player1.score){
+                      winner = this.scoreView1.name;
+                    }else{
+                      winner = [this.scoreView1.name, this.scoreView2.name]
+                    }
+                    var e = new EndGameView(this.paper, winner, this.paper.width/1.8, this.paper.height/3);
+                    this.stopGame();
+                  }
                 }.bind(this)
 
                 // Start the game loop.
-                this.gameLoopTimer = setInterval(
+                this.gameLoopTimer = clearInterval(
                     this.gameLoopTimerService.bind(this),
                     GAME_TIMER_MS);
               },
+  stopGame: function(){
+    window.removeInterval(this.gameLoopTimer);
+  },
+  stopAnimation: function(){
+    window.removeInterval(this.timer);
+  },
 
-  /// <summary> Inpu handler routine. </summary>
+  /// <summary> Input handler routine. </summary>
   onKey: function(e){
                // Handle keys using key mappings.
                var keyCode = e.keyCode;
@@ -271,6 +289,11 @@ var GameUI = {
   gameOver: function(){
     return (this.simulator.allNodesMunched() ||
              (this.player1.clip.empty() && this.player2.clip.empty()));
+  },
+
+  /// <summary> Cleans up and restarts the game. </summary>
+  restart: function(){
+    // This function should definitely have an implementation.
   }
 }
 bindAllFunctions(GameUI);

@@ -55,9 +55,9 @@ var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
   for(var i = 0; i < numMunchers; i++){
     var program = Muncher.randomProgram();
     var muncherView = new MuncherView(GameUI.paper, radius*2, currentSpot,
-                                  program, playerColor);
+                                      program, playerColor, true);
     this.muncherViews.push(muncherView);
-    this.canvasElements.push(muncherView.canvasElement);
+    this.canvasElements.push(muncherView.canvasElements);
     currentSpot = currentSpot.add(this.interval);
   }
 }
@@ -94,9 +94,8 @@ ClipView.prototype.popMuncher = function(){
       var muncher = this.canvasElements.pop();
       // Shift all munchers down.
       var shiftOffset = this.interval.mul(this.currentMuncher);
-      this.canvasElements.animate({transform: "T" + shiftOffset.toS()},
-                                  this.POP_MUNCHER_MS,
-                                  function(){this.currentMuncher++}.bind(this));
+      // Hide text.
+      muncherView.hideText();
       // Eject the last muncher.
       var paperSizeY = new Point(0, this.paper.height);
       var currentLocY = new Point(0, muncherView.loc.y);

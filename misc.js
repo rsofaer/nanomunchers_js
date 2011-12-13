@@ -77,22 +77,22 @@ Array.prototype.detect = function(f){
 
 // An object to keep track of what sounds are
 // currently being played.
-SoundsPlaying = {};
+SoundsPlaying = {fire: 0};
 
 /// <summary> Play a sound. </summary>
 function playSound(soundID){
   if(SoundsPlaying[soundID]){
     soundID +="_"
   }
-  SoundsPlaying[soundID] = true;
+  SoundsPlaying[soundID]++;
   var ele = $("#sounds #" + soundID)[0];
   try{
-    ele.Play();
+    ele.play();
   }catch(err){
-    SoundsPlaying[soundID] = false;
+    SoundsPlaying[soundID] = 0;
   }
   window.setTimeout(function(){
-    SoundsPlaying[soundID] = false;
-  },Number(ele.name)*1000);
+    SoundsPlaying[soundID]--;
+  },1500);
 }
 

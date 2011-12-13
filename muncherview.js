@@ -1,10 +1,11 @@
 /// <summary> Nanomuncher UI object. </summary>
-var MuncherView = function(paper, size, startPos, program, coreColor){
+var MuncherView = function(paper, size, startPos, program,
+                           coreColor, showText){
   var MUNCHER_GLOW_RATE_MS = 1000;
   var MUNCHER_COLOR = "#FFFACD"; // This is 'lemonchiffon', bitch.
   // Hard-coded order of canvas elements.
   var CANVAS_ELE_MAP = {
-    "RIGHT": 1, "UP": 2, "LEFT": 3, "DOWN": 4, "CENTER" : 0
+    "R": 0, "U": 1, "L": 2, "D": 3, "C" : 4
   };
 
   // The nanomuncher program. Used to render the instruction order.
@@ -12,6 +13,7 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
   // The initial position of the nanomuncher in paper coordinates.
   this.startPos = new Point(startPos.x, startPos.y);
   this.animationOffset = new Point(0, 0);
+  this.showText = showText;
 
   /// <summary> Get the muncher location on the screen. </summary>
   this.__defineGetter__("loc", function(){
@@ -19,17 +21,11 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
       })
 
   // Setup the nanomuncher graphics.
-  this.canvasElement = function(){
+  this.canvasElements = function(){
     var set = paper.set();
     var rectDim = size / 3;
     var rectHalfDim = rectDim / 2;
     var textSize = size / 3.25;
-    var programOrder = [
-      program.indexOf("R") + 1,
-      program.indexOf("U") + 1,
-      program.indexOf("L") + 1,
-      program.indexOf("D") + 1
-      ];
     set.push(
         // Right.
         paper.rect(startPos.x + rectHalfDim,
@@ -54,26 +50,46 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
         // Center circle.
         paper.circle(startPos.x, startPos.y,
                      rectDim / 4).attr({
-                       "fill" : "light" + coreColor, "stroke" : "none"}),
-        // Right.
-        paper.text(startPos.x + rectDim, startPos.y, programOrder[0]).attr({
-          "font-family" : "Courier", "font-size" : textSize
-          }),
-        // Up.
-        paper.text(startPos.x, startPos.y - rectDim, programOrder[1]).attr({
-          "font-family" : "Courier", "font-size" : textSize
-          }),
-        // Left.
-        paper.text(startPos.x - rectDim, startPos.y, programOrder[2]).attr({
-          "font-family" : "Courier", "font-size" : textSize
-          }),
-        // Down.
-        paper.text(startPos.x, startPos.y + rectDim, programOrder[3]).attr({
-          "font-family" : "Courier", "font-size" : textSize
-          })
+                       "fill" : "light" + coreColor, "stroke" : "none"})
         );
+    // Create glows.
+    this.glowStartIdx = set.length;
+    set.push(
+        set[0].glow({"color" : MUNCHER_COLOR}).hide(),
+        set[1].glow({"color" : MUNCHER_COLOR}).hide(),
+        set[2].glow({"color" : MUNCHER_COLOR}).hide(),
+        set[3].glow({"color" : MUNCHER_COLOR}).hide()
+        );
+    // Show text only when size is large.
+    this.textStartIdx = set.length;
+    if(this.showText){
+      var programOrder = [
+        program.indexOf("R") + 1,
+        program.indexOf("U") + 1,
+        program.indexOf("L") + 1,
+        program.indexOf("D") + 1
+        ];
+      set.push(
+          // Right.
+          paper.text(startPos.x + rectDim, startPos.y, programOrder[0]).attr({
+            "font-family" : "Courier", "font-size" : textSize
+            }),
+          // Up.
+          paper.text(startPos.x, startPos.y - rectDim, programOrder[1]).attr({
+            "font-family" : "Courier", "font-size" : textSize
+            }),
+          // Left.
+          paper.text(startPos.x - rectDim, startPos.y, programOrder[2]).attr({
+            "font-family" : "Courier", "font-size" : textSize
+            }),
+          // Down.
+          paper.text(startPos.x, startPos.y + rectDim, programOrder[3]).attr({
+            "font-family" : "Courier", "font-size" : textSize
+            })
+          );
+    }
     return set;
-  }()
+  }.bind(this)()
 
   /// <summary> Move the nanomuncher to a new location using the
   ///   given instruction.
@@ -82,17 +98,24 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
     this.animationOffset = newPoint.sub(this.startPos);
     var tformStr = "t";
     tformStr += this.animationOffset.x + "," + this.animationOffset.y;
-    this.canvasElement.animate({transform: tformStr}, GAME_TIMER_MS*0.8);
+    this.canvasElements.animate({transform: tformStr}, GAME_TIMER_MS*0.8);
+    // Show the glow.
+    var glowIdx = CANVAS_ELE_MAP[this.model.programState[3]];
+    this.canvasElements[this.glowStartIdx + 0].hide();
+    this.canvasElements[this.glowStartIdx + 1].hide();
+    this.canvasElements[this.glowStartIdx + 2].hide();
+    this.canvasElements[this.glowStartIdx + 3].hide();
+    this.canvasElements[this.glowStartIdx + glowIdx].show();
   }.bind(this)
 
   /// <summary> Remove the muncher from the canvas. </summary>
   this.die = function(){
-    this.canvasElement.remove();
+    this.canvasElements.remove();
   }.bind(this)
 
   // reissb -- 20111212 -- The core glow is a major performance hit.
 //  // Create glow for core.
-//  this.coreGlow = this.canvasElement[CANVAS_ELE_MAP["CENTER"]].glow({
+//  this.coreGlow = this.canvasElements[CANVAS_ELE_MAP["C"]].glow({
 //      "color" : coreColor, "fill" : true
 //      }).toFront().transform("s0");
 //  // Glow state flag.
@@ -137,5 +160,14 @@ var MuncherView = function(paper, size, startPos, program, coreColor){
 //  this.stopGlowing = function(){
 //    this.glowing = false;
 //  }.bind(this)
+}
+/// <summary> Hide the program order text. </summary>
+MuncherView.prototype.hideText = function(){
+  if(this.showText){
+    this.canvasElements[this.textStartIdx + 0].hide();
+    this.canvasElements[this.textStartIdx + 1].hide();
+    this.canvasElements[this.textStartIdx + 2].hide();
+    this.canvasElements[this.textStartIdx + 3].hide();
+  }
 }
 

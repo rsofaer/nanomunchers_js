@@ -1,64 +1,88 @@
-<head>
-  <script src="lib/jquery.js"></script>
-  <script src="lib/raphael.js"></script>
-  <script src="lib/keycodes.js"></script>
-
-  <script src="misc.js"></script>
-  <script src="nanomunchers.js"></script>
-  <script src="board.js"></script>
-  <script src="boardview.js"></script>
-  <script src="playerView.js"></script>
-  <script src="muncherView.js"></script>
-  <script src="simulator.js"></script>
-  <script src="clip.js"></script>
-  <script src="clipview.js"></script>
-<style>
-  .menuDiv {background-image:url('game-over.jpg');height:600px;display:none;}
-  .inputs {float:center;position:absolute;align:center;}
-  
-</style>
-</head>
-
-<div id='_menu' class='menuDiv'>
-  <div id='_input' class='inputs'>
-    <label for='_p1name' style='color:lightblue'>Player1's Name:</label>
-    <input type='text' id='_p1name'></input></br>
-    <label for='_p2name' style='color:lightblue'>Player2's Name:</label>
-    <input type='text' id='_p2name'></input></br>
-    <div id='_buttonDiv' style='padding-left:105px;'>
-      <button id='btnStart'> start </button>
-    </div>
-  </div>
-  
-<div id="sounds">
-  <embed src="sounds/fire.wav" autostart=false width=1 height=1 name="1" id="fire" enablejavascript="true">
-  <embed src="sounds/fire.wav" autostart=false width=1 height=1 name="1" id="fire_" enablejavascript="true">
-</div>
-
-<script> 
-  $('document').ready(function(){
-    $('#_menuDiv').show();
-  });
-  $('#btnStart').click(function() {
-  player1 = document.getElementById('_p1name').value;
-  player2 = document.getElementById('_p2name').value;
-  if(player1 != '' && player2!='')
-  {
-    $('#_menu').replaceWith("<div id='game-screen'> </div>");
-    // pass the player information to the GameUI class.
+<html>
+  <head>
     
-  }
-  else
-  {
-     if(player1 == '') 
-     {
-       player1 = 'Player 1';
-     }
-     if(player2 == '')
-     {
-       player2 = 'Player 2';
-     }
-  }
-  GameUI.initialize();
-  });  
-</script>
+     <style>
+      #overlay {
+      z-index:9;
+      position:absolute;
+      background:white;
+      width:400px;
+      height:400px;
+      opacity:.9;
+      float:center;
+      padding: 0 200 200 200;
+      visibility:hidden;
+      }
+      .rowInput{opacity:1;z-index:10;padding:0px;cell-padding:0;border:0px;}
+      .inputText{color:white;}
+      .top-spacer {height:40%;}
+      .left-spacer{height:40%;width:18%;float:left;}
+      .table-container {float:left;position:relative;background:black;padding:4px}
+    </style>    
+   
+    <script src="games/nanomunchers/lib/jquery.js"></script>
+    <script src="games/nanomunchers/lib/raphael.js"></script>
+    <script src="games/nanomunchers/lib/keycodes.js"></script>
+    <script src="games/nanomunchers/misc.js"></script>
+    <script src="games/nanomunchers/nanomunchers.js"></script>
+    <script src="games/nanomunchers/boardview.js"></script>
+    <script src="games/nanomunchers/playerview.js"></script>
+    <script src="games/nanomunchers/muncherview.js"></script>
+    <script src="games/nanomunchers/simulator.js"></script>
+    <script src="games/nanomunchers/clipview.js"></script>
+    <script src="games/nanomunchers/scoreview.js"></script>
+    <script> 
+      
+      $('document').ready(function(){
+        GameUI.initialize();
+        document.getElementById('overlay').style.visibility = 'visible';
+      });
+
+        function runGame() {
+        document.getElementById('overlay').style.visibility = 'hidden';
+        player1 = document.getElementById('_p1name').value;
+        player2 = document.getElementById('_p2name').value;
+        if(player1 == '') 
+        {
+          player1 = 'Player 1';
+        }
+        if(player2 == '')
+        {
+          player2 = 'Player 2';
+        }
+      }  
+    </script>
+    
+  </head>
+  <body>
+    <div id="overlay">
+      <div class="top-spacer"></div>
+      <div id='_input'>
+        <div class="left-spacer"></div>
+        <div class="table-container">
+	  <table cellpadding='0px' cellspacing='0' border='0px'>
+	    <tr class='rowInput'>
+	  	<td><label for='_p1name' class='inputText'>Blue player's name: </label></td>
+	  	<td><input type='text' id='_p1name'></input></td>	
+	    </tr>
+	    <tr class='rowInput'>
+	  	<td><label for='_p2name' class='inputText'>Green player's name:</label></td>
+	  	<td><input type='text' id='_p2name'></input></td>
+	    </tr>
+	    <tr class='rowInput'>
+	  	<td colspan=1></td>
+	     	<td><button id='btnStart' onclick='runGame()' style='background-color:lightred'>Start Game!</button></td>
+	    </tr>
+	  </table>
+	</div>
+      </div>
+    </div>
+  
+    <div id="sounds">
+      <audio src="games/nanomunchers/sounds/fire.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire" > </audio>
+      <audio src="games/nanomunchers/sounds/fire.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire_"> </audio>
+    </div>
+    <div id='game-screen'></div>
+</body>
+    
+</html>

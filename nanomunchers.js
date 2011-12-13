@@ -46,34 +46,52 @@ var GameUI = {
                 this.paper.canvas.style["background-color"] = "lightgray";
                 this.paper.canvas.style["border"] = "solid 1px";
                 // Create players.
-                this.player1 = new PlayerView(this.paper, 50,
+                var PLAYER_SIZE = 40;
+                this.player1 = new PlayerView(this.paper, PLAYER_SIZE,
                                               new Point(300, 300), "SEA")
-                this.player2 = new PlayerView(this.paper, 50,
+                this.player2 = new PlayerView(this.paper, PLAYER_SIZE,
                                               new Point(500, 300), "FOREST")
+                // Create score displays.
+                var SCORE_X_OFFSET = 5;
+                var SCORE_Y_OFFSET = 30;
+                var SCORE_TEXT_SIZE = 23;
+                // Player 1 score.
+                this.scoreView1 =
+                  new ScoreView(this.paper, new Point(SCORE_X_OFFSET,
+                                                      SCORE_Y_OFFSET),
+                                this.player1.colorScheme[1], SCORE_TEXT_SIZE,
+                                "left", "Player1", 0);
+                this.scoreView2 =
+                  new ScoreView(this.paper, new Point(XSIZE - SCORE_X_OFFSET,
+                                                      SCORE_Y_OFFSET),
+                                this.player2.colorScheme[1], SCORE_TEXT_SIZE,
+                                "right", "Player2", 0);
 
                 // Create clips.
                 var NUM_MUNCHERS = 10;
-                var CLIP_WIDTH = Math.floor(0.08 * XSIZE);
-                var CLIP_HEIGHT = Math.floor(0.85 * YSIZE);
+                var CLIP_Y_OFFSET = Math.floor(0.125 * YSIZE);
+                var CLIP_WIDTH = Math.floor(0.0625 * XSIZE);
+                var CLIP_HEIGHT = Math.floor(0.75 * YSIZE);
                 var clipDims = new Point(CLIP_WIDTH, CLIP_HEIGHT);
                 this.player1.clip = new ClipView(this.paper,
-                                                 new Point(0,0),
+                                                 new Point(0, CLIP_Y_OFFSET),
                                                  clipDims,
                                                  NUM_MUNCHERS,
                                                  this.player1.colorScheme[1]);
                 var p2ClipX = XSIZE - CLIP_WIDTH;
                 this.player2.clip = new ClipView(this.paper,
-                                                 new Point(p2ClipX, 0),
+                                                 new Point(p2ClipX,
+                                                           CLIP_Y_OFFSET),
                                                  clipDims,
                                                  NUM_MUNCHERS,
                                                  this.player2.colorScheme[1])
 
                 // Make board and its view.
-                var XNODESIZE = 10;
-                var YNODESIZE = 9;
+                var XNODESIZE = 14;
+                var YNODESIZE = 10;
                 this.board = new Board(XNODESIZE, YNODESIZE,
                                        Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
-                this.boardView = new BoardView(this.paper, this.board, 15, 60);
+                this.boardView = new BoardView(this.paper, this.board, 11, 50);
                 // Create simulation.
                 this.simulator = new Simulator(this.board);
                 // Holder for muncher UI items.
@@ -94,6 +112,7 @@ var GameUI = {
                 this.gameLoopTimerService = function(){
                   this.simulator.stepTime();
                   this.markMunchedNodes();
+                  this.drawScores();
                   this.moveMunchers();
                 }.bind(this)
 
@@ -183,7 +202,8 @@ var GameUI = {
 
   /// <summary> Draw the scores of the players on top of the board. </summary>
   drawScores: function(){
-    // this function should probably have an implementation.
+    this.scoreView1.updateScore(this.player1.score);
+    this.scoreView2.updateScore(this.player2.score);
   },
 
   /// <summary> Mark the muncher nodes before the munchers move. </summary>
@@ -200,7 +220,6 @@ var GameUI = {
         nodeView.munch(nodeView.model.munchedBy);
       }
     });
-    this.drawScores();
   },
 
   /// <summary> Update the UI after a simulation step. </summary>
@@ -230,12 +249,14 @@ var GameUI = {
         if(program){
           var muncher = this.simulator.dropMuncher(player,
               player.currentTarget.model, program);
-          var muncherView = new MuncherView(GameUI.paper, 20,
+          var muncherView = new MuncherView(GameUI.paper, 17,
                                             player.currentTarget,
-                                            program, player.colorScheme[1]);
+                                            program, player.colorScheme[1],
+                                            false);
           muncherView.model = muncher;
           // reissb -- 20111211 -- Fix for z-order issue.
-          muncherView.canvasElement.insertBefore(this.boardView.canvasElements);
+          muncherView.canvasElements.insertBefore(
+              this.boardView.canvasElements);
           this.muncherViews.push(muncherView);
           this.boardView.nodes[0].canvasElement.insertAfter(
               this.boardView.canvasElements[1]);
@@ -244,6 +265,12 @@ var GameUI = {
         }
       }
     }
+  },
+
+  /// <summary> Return whether the game is over </summary>
+  gameOver: function(){
+    return (this.simulator.allNodesMunched() ||
+             (this.player1.clip.empty() && this.player2.clip.empty()));
   }
 }
 bindAllFunctions(GameUI);

@@ -39,6 +39,28 @@ while munchers are still driving to their next node will fall until the
 exisiting munchers complete the cycle, at which time the conflict resolution
 rules are enforced.
 
+ARCHITECTURE
+boardview.js - Board GUI elements.
+clipview.js - Nanomuncher clip GUI elements.
+lib - Contains third party libraries Raphael, JQuery.
+misc.js - Helper functions.
+muncherview.js - Nanomuncher GUI elements.
+nanomunchers.js - Game UI elements and global constants.
+page.html - Main HTML page hosting game.
+playerview.js - Player GUI elements.
+scoreview.js - Score GUI elements.
+server - Runs a test HTTP server.
+simulator.js - Nanomunchers simulation logic elements.
+sounds - Sounds used during gameplay.
+
+The game adopts a model/view strategy. All of the core logic elements necessary
+to run the game and enforce its rules are implemented in Simulator. Each game
+element has a corresponding view object implemented in a separate file. The
+main driver of the game is the GameUI implemented in nanomunchers.js. The
+GameUI owns all of the UI instances as well as the simulator. Its game loop
+timer advances the game simulation while the animation elements are handled by
+the animation timer service.
+
 MANDATORY FEATURES
 * Board generator.
 * Game state model.

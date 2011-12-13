@@ -92,7 +92,7 @@ function playSound(soundID){
   }
   window.setTimeout(function(){
     SoundsPlaying[soundID]--;
-  },1000);
+  },1500);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

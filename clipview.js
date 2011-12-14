@@ -27,6 +27,9 @@ var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
   this.numMunchers = numMunchers;
   this.ready = true;
 
+  // A player id used to fire the correct fire sound.
+  this.player_id = player_id
+
   // Make sure we open the door inwards.
   var hinges = [clipBottomLeft, clipBottomRight];
   this.doorHinge = Array.min(hinges, function(p){
@@ -101,7 +104,7 @@ ClipView.prototype.popMuncher = function(){
       var currentLocY = new Point(0, muncherView.getLoc().y);
       var ejectOffset = paperSizeY.add(currentLocY.add(this.interval.mul(
             this.numMunchers)));
-      playSound("fire");
+      playSound("fire" + this.player_id);
       muncher.animate({transform: "T" +
                        muncherView.animationOffset.add(ejectOffset).toS()},
                       this.POP_MUNCHER_MS, "<",

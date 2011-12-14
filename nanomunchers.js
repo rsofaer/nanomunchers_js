@@ -80,14 +80,14 @@ var GameUI = {
                                      new Point(0, CLIP_Y_OFFSET),
                                      clipDims,
                                      NUM_MUNCHERS,
-                                     this.player1.colorScheme[1]);
+                                     this.player1.colorScheme[1], 1);
     var p2ClipX = XSIZE - CLIP_WIDTH;
     this.player2.clip = new ClipView(this.paper,
                                      new Point(p2ClipX,
                                                CLIP_Y_OFFSET),
                                      clipDims,
                                      NUM_MUNCHERS,
-                                     this.player2.colorScheme[1])
+                                     this.player2.colorScheme[1], 2)
 
     // Make board and its view.
     var XNODESIZE = 14;

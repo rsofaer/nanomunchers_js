@@ -7,7 +7,7 @@
 ///     nanomunchers did not seem appealing.
 ///   </para>
 /// <remarks>
-var ClipView = function(paper, topLeft, size, numMunchers, playerColor){
+var ClipView = function(paper, topLeft, size, numMunchers, playerColor, player_id){
   this.size = size;
   this.paper = paper;
   var topLeft = topLeft;

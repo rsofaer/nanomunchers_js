@@ -96,21 +96,26 @@
         p.h1{
           font-size: 2em;
           padding: 0;
-          margin: 0.4em 0 0.2em 0;
+          margin: 0.8em 0 0.4em 0;
         }
         p.h2{
-          font-size: 1.5em;
+          font-size: 1.66em;
           padding: 0;
-          margin: 0.4em 0 0.2em 0;
+          margin: 0.6em 0 0.4em 0;
+        }
+        p.h3{
+          font-size: 1.33em;
+          padding: 0;
+          margin: 0.5em 0 0.4em 0;
         }
         p.desc{
           font-size: 1em;
           font-family: Helvetica, sans-serif;
-          margin: 0.3em 0 0.3em 1em;
+          margin: 0.4em 0 0.4em 0em;
         }
         img.preview{
           border: solid black 2px;
-          margin: 0.2em 0 0.2em 1em;
+          margin: 0.2em 0 0.2em 0em;
         }
       </style>
       <p class="h1">Instructions</p>
@@ -132,17 +137,7 @@
         munched the most nodes.
       </p>
       <p class="h2">Gameplay</p>
-      <p class="desc">Watch your nanomuncher clip underneath your player
-        name to see how many nanomunchers remain. The nanomuncher at the bottom
-        of the clip is the next to be deployed. Its program instructions are
-        shown as the numbers 
-        <span style="font-weight: bold">1</span>,
-        <span style="font-weight: bold">2</span>,
-        <span style="font-weight: bold">3</span>, and
-        <span style="font-weight: bold">4</span> indicating the order by which
-        the nanomuncher will move once deployed on the graph.
-      </p>
-      <p class="h2">Blue Player</p>
+      <p class="h3">Blue Player</p>
       <p class="desc">Control the
         <span style="color: blue; font-weight: bold;">blue</span>
         player using the keyboard.
@@ -157,7 +152,7 @@
         <span style="font-weight: bold">D</span> and fire a nanomuncher using
         <span style="font-weight: bold">SPACEBAR</span>.
       </p>
-      <p class="h2">Green Player</p>
+      <p class="h3">Green Player</p>
       <p class="desc">Control the
         <span style="color: green; font-weight: bold;">green</span>
         player using the keyboard.
@@ -172,7 +167,19 @@
         <span style="font-weight: bold">RIGHT</span> and fire a nanomuncher
         using <span style="font-weight: bold">ENTER</span>.
       </p>
+      <p class="h3">Clip</p>
+      <p class="desc">Watch your nanomuncher clip underneath your player
+        name to see how many nanomunchers remain. The nanomuncher at the bottom
+        of the clip is the next to be deployed. Its program instructions are
+        shown as the numbers 
+        <span style="font-weight: bold">1</span>,
+        <span style="font-weight: bold">2</span>,
+        <span style="font-weight: bold">3</span>, and
+        <span style="font-weight: bold">4</span> indicating the order by which
+        the nanomuncher will move once deployed on the graph.
+      </p>
       <p class="h2">Nanomunchers</p>
+      <p class="h3">Movement</p>
       <p class="desc">Nanomunchers obey a simple program that gives priority to
         each of the directions
         <span style="font-weight: bold">up</span>,
@@ -196,6 +203,22 @@
       </p>
       <p class="desc">When there are no clear moves in all four directions,
         the nanomuncher is deactivated as its work is complete.
+      </p>
+      <p class="h3">Conflicts</p>
+      <p class="desc">Nanomunchers cannot be fired onto munched nodes. When
+        two nanomunchers reach the same node, they are expired according to
+        the direction from which they arrived. The order of precedence for
+        conflicts is 
+        <span style="font-weight: bold">up</span>, then
+        <span style="font-weight: bold">down</span>, then
+        <span style="font-weight: bold">left</span>, then
+        <span style="font-weight: bold">right</span>. For instance, if two
+        nanomunchers arrive at the same node with the first one using its
+        <em>left</em> instruction and the other its <em>down</em> instruction,
+        then the second one will prevail since it has a higher precedence.
+        Conflicts with newly spawned nanomunchers are always resolved such
+        that the newly spawned nanomuncher is destroyed by those existing
+        previously.
       </p>
     </div>
   </body>

@@ -2,7 +2,7 @@
 var ANIMATION_TIMER_MS = 100;
 
 /// <summary> Time between game timesteps. </summary>
-var GAME_TIMER_MS = 800;
+var GAME_TIMER_MS = 10000;
 
 /// <summary> A 2d point. </summary>
 var Point = function(x_, y_){
@@ -93,7 +93,7 @@ var GameUI = {
     var XNODESIZE = 14;
     var YNODESIZE = 10;
     this.board = new Board(XNODESIZE, YNODESIZE,
-                           Math.floor(XNODESIZE*YNODESIZE/1.8), 0.8)
+                           XNODESIZE*YNODESIZE, 1.0)
     this.boardView = new BoardView(this.paper, this.board, 11, 50);
     // Create simulation.
     this.simulator = new Simulator(this.board);

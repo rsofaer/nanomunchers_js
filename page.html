@@ -91,6 +91,113 @@
       <audio src="sounds/short_fire2.wav" autostart=false width=1 height=1 preload="auto" class="1" id="fire2_"> </audio>
     </div>
     <div id='game-screen'></div>
+    <div style="width: 600px">
+      <style>
+        p.h1{
+          font-size: 2em;
+          padding: 0;
+          margin: 0.4em 0 0.2em 0;
+        }
+        p.h2{
+          font-size: 1.5em;
+          padding: 0;
+          margin: 0.4em 0 0.2em 0;
+        }
+        p.desc{
+          font-size: 1em;
+          font-family: Helvetica, sans-serif;
+          margin: 0.3em 0 0.3em 1em;
+        }
+        img.preview{
+          border: solid black 2px;
+          margin: 0.2em 0 0.2em 1em;
+        }
+      </style>
+      <p class="h1">Instructions</p>
+      <p class="h2">Objective</p>
+      <p class="desc">
+        Try to &quot;munch&quot; as many of the
+        <span style="color: red; font-weight: bold;">toxic</span>
+        nodes as possible. As you maneuver your ship, the closest
+        <span style="color: red; font-weight: bold;">toxic</span>
+        node will become highlighted either in
+        <span style="color: blue; font-weight: bold;">blue</span> or
+        <span style="color: green; font-weight: bold;">green</span>
+        depending upon your player color. Fire a nanomuncher to begin
+        munching the graph!
+      </p>
+      <p class="desc">The game ends either when the entire graph is munched or
+        when both players have run out of nanomunchers and there are no longer
+        any nanomunchers active on the board. The winner is the player that
+        munched the most nodes.
+      </p>
+      <p class="h2">Gameplay</p>
+      <p class="desc">Watch your nanomuncher clip underneath your player
+        name to see how many nanomunchers remain. The nanomuncher at the bottom
+        of the clip is the next to be deployed. Its program instructions are
+        shown as the numbers 
+        <span style="font-weight: bold">1</span>,
+        <span style="font-weight: bold">2</span>,
+        <span style="font-weight: bold">3</span>, and
+        <span style="font-weight: bold">4</span> indicating the order by which
+        the nanomuncher will move once deployed on the graph.
+      </p>
+      <p class="h2">Blue Player</p>
+      <p class="desc">Control the
+        <span style="color: blue; font-weight: bold;">blue</span>
+        player using the keyboard.
+      </p>
+      <img class="preview" height="100px" src="images/blue_player_keys.png" />
+      <p class="desc">Maneuver the
+        <span style="color: blue; font-weight: bold;">blue</span>
+        ship using the keys
+        <span style="font-weight: bold">W</span>,
+        <span style="font-weight: bold">A</span>,
+        <span style="font-weight: bold">S</span>, and
+        <span style="font-weight: bold">D</span> and fire a nanomuncher using
+        <span style="font-weight: bold">SPACEBAR</span>.
+      </p>
+      <p class="h2">Green Player</p>
+      <p class="desc">Control the
+        <span style="color: green; font-weight: bold;">green</span>
+        player using the keyboard.
+      </p>
+      <img class="preview" height="100px" src="images/green_player_keys.png" />
+      <p class="desc">Maneuver the
+        <span style="color: green; font-weight: bold;">green</span>
+        ship using the keys
+        <span style="font-weight: bold">UP</span>,
+        <span style="font-weight: bold">LEFT</span>,
+        <span style="font-weight: bold">DOWN</span>, and
+        <span style="font-weight: bold">RIGHT</span> and fire a nanomuncher
+        using <span style="font-weight: bold">ENTER</span>.
+      </p>
+      <p class="h2">Nanomunchers</p>
+      <p class="desc">Nanomunchers obey a simple program that gives priority to
+        each of the directions
+        <span style="font-weight: bold">up</span>,
+        <span style="font-weight: bold">down</span>,
+        <span style="font-weight: bold">left</span>, and
+        <span style="font-weight: bold">right</span>. Imagine that you are
+        standing in the middle of the intersection of two roads holding a
+        paper with the text &quot;<em>D U L R</em>&quot;. This set of
+        instructions is guiding you to move to the next intersection by
+        checking in the order of <em>down</em>, then <em>up</em>,
+        then <em>left</em>, then <em>right</em>.
+      </p>
+      <img class="preview" width="125px" src="images/muncher_all_dir.png" />
+      <img class="preview" width="125px" src="images/muncher_move_south.png" />
+      <p class="desc"> The first direction that you find that is clear,
+        you move to it and remember where you left off. At the next
+        intersection, you begin searching for a move by starting from the next
+        instruction in the list so that if you moved <em>down</em> at the last
+        node, you will check <em>up</em>, then <em>left</em>, then
+        <em>right</em>, then <em>up</em> to make the next move.
+      </p>
+      <p class="desc">When there are no clear moves in all four directions,
+        the nanomuncher is deactivated as its work is complete.
+      </p>
+    </div>
   </body>
   
 </html>
